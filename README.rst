@@ -58,7 +58,9 @@ https://github.com/monnierj/django-datatables-server-side
 Demo site
 ---------
 
-A demo site is available at: http://django-ajax-datatable-demo.brainstorm.it/tracks/
+A demo site is available at: http://django-ajax-datatable-demo.brainstorm.it/tracks/.
+
+The full source code is in the `example` folder of this package.
 
 Installation
 ------------
