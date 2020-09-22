@@ -3,6 +3,10 @@
 History
 =======
 
+v4.0.1
+------
+* A few typo fixes here and there
+
 v4.0.0
 ------
 * package renamed from `django-datatables-view` to `django-ajax-datatable`
