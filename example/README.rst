@@ -20,7 +20,7 @@ Create a super-user for the admin:
 
     python manage.py createsuperuser
 
-Donwload js packages:
+Download js packages:
 
 .. code-block:: bash
 
