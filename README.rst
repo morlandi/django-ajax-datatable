@@ -45,7 +45,7 @@ Features:
 - Column specific filtering
 - Foreign key fields can be used, using the "model1__model2__field" notation
 - Customizable rendering of table rows
-- ...
+- and more ...
 
 Inspired from:
 
@@ -121,7 +121,7 @@ Example:
 
 
 Basic AjaxDatatableView
---------------------
+-----------------------
 
 To provide server-side rendering of a Django Model, you need a specific
 view derived from AjaxDatatableView() which will be called multiple times via Ajax during data navigation.
@@ -259,7 +259,7 @@ AjaxDatatableViewUtils.initialize_table() parameters are:
 
 
 AjaxDatatableView Class attributes
--------------------------------
+----------------------------------
 
 Required:
 
@@ -582,7 +582,7 @@ Example:
 
 
 Overridable AjaxDatatableView methods
-----------------------------------
+-------------------------------------
 
 get_initial_queryset()
 ......................
