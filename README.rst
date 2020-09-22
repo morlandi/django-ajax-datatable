@@ -23,8 +23,8 @@ Notes:
      The app is intended to be opensource; feel free to use it we no restrictions at all.
      I added a MIT Licence file to the github repo, to make this more explicit.
 
-   - The app hasn't been published on PyPI since, due to a name conflict, that would require renaming it.
-     Is it worth it ? If you think so, please let me know opening an issue in the Github project.
+   - Since v4.0.0, the package has been renamed from `django-datatables-view` to `django-ajax-datatable`
+     to avoid a conflict on PyPI
 
    - Unfortunately I only have a few unit tests, and didn't bother (yet) to add a TOX procedure to run then with
      different Python/Django versions.
@@ -62,13 +62,13 @@ Install the package by running:
 
 .. code:: bash
 
-    pip install git+https://github.com/morlandi/django-ajax-datatable
+    pip install django-ajax-datatable
 
-or possibly a specific version:
+or:
 
 .. code:: bash
 
-    pip install git+https://github.com/morlandi/django-ajax-datatable@v3.0.0
+    pip install git+https://github.com/morlandi/django-ajax-datatable@v4.0.0
 
 then add 'ajax_datatable' to your INSTALLED_APPS:
 
