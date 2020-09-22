@@ -1,0 +1,116 @@
+
+.dataTables_wrapper .daterange input {
+    width: 150px;
+    padding: 5px;
+    margin: 0 4px;
+    border: 1px solid #e5e6e7;
+    border-radius: 4px;
+}
+
+.dataTables_wrapper #datatable_filter input[type="search"] {
+    border-radius: 4px;
+}
+
+.dataTables_wrapper thead .datatable-column-filter-row th input {
+    width: 100%;
+}
+
+.dataTables_wrapper thead .datatable-column-filter-row th i {
+    font-size: 18px;
+    color: #999;
+    padding-top: 2px;
+    padding-left: 2px;
+}
+
+.dataTables_wrapper thead .datatable-column-filter-row input::placeholder {
+    color: #ccc;
+    font-weight: normal;
+    font-size: 11px;
+}
+
+
+td.dataTables_row-tools {
+    /*cursor: pointer;*/
+}
+td.dataTables_row-tools .minus { display: none; }
+td.dataTables_row-tools .plus { display: inline; }
+
+tr.shown td.dataTables_row-tools .minus { display: inline; }
+tr.shown td.dataTables_row-tools .plus { display: none; }
+
+/*table.details {
+    padding-left: 80px;
+    background-color: #fff;
+}
+
+table.details td {
+    padding: 0 !important;
+    color: #999;
+}
+*/
+
+
+/*
+ * Experimental: Optionally control the (minimum) width of each single column
+ */
+
+/* This is required to optionally control the width of a single column         */
+/* with the 'width' option (will act more as a 'min-width', though)            */
+/* See: https://datatables.net/forums/discussion/30530/set-fixed-column-width  */
+
+table.dataTable {
+    /*table-layout: fixed;*/
+    font-size: 12px;
+    line-height: 14px;
+    background-color: white;
+}
+
+/* However, both <th> and <td> elements within the dataTables wrapper need      */
+/* a CSS styling rule of "box-sizing: content-box" applied. This seems to       */
+/* be required for the JS to correctly calculate th widths in the docked header */
+/* See: https://datatables.net/forums/discussion/14342/column-header-not-aligned-with-column-data-with-horizontal-scrolling/p2  */
+
+/* I still notice some problems with Safari when during windows resizing, */
+/* however, all in all, still seems a good deal ;)                        */
+
+table.dataTable,
+table.dataTable th,
+table.dataTable td {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+.table.dataTable.compact td, .table.dataTable.compact th {
+    /*padding: .75rem;*/
+    padding: .4rem;
+}
+
+.table.dataTable.super-compact td, .table.dataTable.supercompact th {
+    padding: 0 4px;
+    font-size: 12px;
+}
+
+
+table.dataTable .row-details {
+    padding: 0;
+    margin: 0;
+    margin-left: 4px;
+    border-collapse: collapse;
+}
+
+table.dataTable .row-details tr {
+    border-bottom: 1px solid #ddd;
+}
+
+table.dataTable .row-details td {
+    padding: 6px 12px;
+}
+
+/*
+    "header width issue" fix
+    https://datatables.net/forums/discussion/2148/header-width-issue
+*/
+
+div.dataTables_sort_wrapper {white-space:nowrap !important;}
+th {white-space:nowrap !important;}

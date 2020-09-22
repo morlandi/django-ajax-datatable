@@ -1,0 +1,3 @@
+
+class ColumnOrderError(Exception):
+    pass

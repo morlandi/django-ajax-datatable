@@ -1,0 +1,72 @@
+{% load i18n static %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel='stylesheet' href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
+    <link rel='stylesheet' href="{% static 'font-awesome/css/font-awesome.min.css' %}">
+
+    <link href="{% static 'ajax_datatable/css/style.css' %}" rel="stylesheet" />
+    <link rel='stylesheet' href="{% static 'datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}">
+    <link rel='stylesheet' href="{% static 'datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" />
+
+    <link rel="stylesheet" href="{% static 'example.css' %}">
+    {% block extrastyle %}
+    {% endblock extrastyle %}
+</head>
+
+<body class="page-{% block body-class%}{% endblock body-class%}">
+    {% include 'navbar.html' %}
+
+    <main role="main" class="container">
+
+        <div id="page-title"><h2>{% block page-title %}{% endblock page-title %}</h2></div>
+
+        {% block messages %}
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{message.tag}}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        {% endblock messages %}
+
+        <div id="content">
+        {% block content %}
+            <h1>Content goes here</h1>
+        {% endblock content %}
+        </div>
+
+    </main>
+
+    <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'popper.js/dist/umd/popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ajax_datatable/js/utils.js' %}"></script>
+
+    <script src="{% static 'datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+
+    <script src="{% static 'datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+
+    <script src="{% static 'jszip/dist/jszip.min.js' %}"></script>
+    <script src="{% static 'pdfmake/build/pdfmake.min.js' %}"></script>
+    <script src="{% static 'pdfmake/build/vfs_fonts.js' %}"></script>
+
+    <script>
+
+    </script>
+
+    {% block extrajs %}
+    {% endblock extrajs %}
+
+</body>
+
+</html>

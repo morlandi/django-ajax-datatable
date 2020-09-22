@@ -1,0 +1,27 @@
+{
+  "name": "example",
+  "version": "0.0.0",
+  "description": "Project \"example\" ===============",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/morlandi/django-ajax-datatable"
+  },
+  "author": "Mario Orlandi",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.5.2",
+    "datatables.net": "^1.10.22",
+    "datatables.net-bs4": "^1.10.22",
+    "datatables.net-buttons": "^1.6.4",
+    "datatables.net-buttons-bs4": "^1.6.4",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.5.1",
+    "jszip": "^3.5.0",
+    "pdfmake": "^0.1.68",
+    "popper.js": "^1.16.1"
+  }
+}

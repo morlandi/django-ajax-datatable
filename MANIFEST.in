@@ -1,0 +1,5 @@
+include README.rst
+include LICENSE
+include CHANGELOG.rst
+recursive-include ajax_datatable/static *
+recursive-include ajax_datatable/templates *

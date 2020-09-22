@@ -1,0 +1,73 @@
+
+body {
+     padding-top: 5rem;
+     background-color: #eee;
+}
+
+.messages {
+    border: 1px dashed gray;
+    color: gray;
+    padding: 10px;
+    background-color: #ddd;
+}
+.messages li {
+    margin-left: 20px;
+}
+
+#content {
+    margin-bottom: 30px;
+}
+
+main {
+}
+
+body.page-index a.nav-link.page-index,
+body.page-compress-image a.nav-link.page-compress-image,
+body.page-test a.nav-link.page-test {
+    color: #fff;
+}
+
+h3 {
+    color: #127EC5;
+}
+
+.numeric {
+    text-align: right;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+table.simpletable {
+    border-collapse: collapse;
+}
+table.simpletable td {
+    border: 1px solid #ddd;
+    padding: 2px 4px;
+    font-size: 12px;
+}
+
+
+/*
+ *  Sweetalert2
+ */
+
+/* https://github.com/sweetalert2/sweetalert2/issues/855 */
+/*
+.swal2-popup {
+    font-size: 1.6rem !important;
+}
+
+.swal2-actions button {
+    min-width: 8em;
+    margin: 0 6px;
+}
+*/
+
+.swal2-container {
+    z-index: 3000;
+}
+
+
+
