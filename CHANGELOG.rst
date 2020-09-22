@@ -68,7 +68,6 @@ v3.0.1
 ------
 * js fix (same as v2.3.5)
 
-* js fix
 v3.0.0
 ------
 * Bump major version to welcome Django 3
