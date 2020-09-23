@@ -3,6 +3,11 @@
 History
 =======
 
+v4.0.2
+------
+* overridable `render_row_details_template_name` attribute added
+* support to search multiple values (see `search_values_separator`)
+
 v4.0.1
 ------
 * A few typo fixes here and there

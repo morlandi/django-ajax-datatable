@@ -8,6 +8,10 @@ from .utils import parse_date
 def build_column_filter(column_name, column_obj, column_spec, search_value):
     search_filter = None
 
+    # v4.0.2: we now accept multiple search values (to be ORed),
+    # now implemented for text search: "aaa+bbb" --> Q("aaa") | Q("bbb")
+    # TODO: check what happens with "choices"
+
     # if type(column_obj.model_field) == fields.CharField:
     #     # do something special with this field
 
@@ -36,7 +40,16 @@ def build_column_filter(column_name, column_obj, column_spec, search_value):
             pass
     else:
         query_param_name = column_obj.get_field_search_path()
-        #search_filters |= Q(**{query_param_name + '__istartswith': search_value})
-        search_filter = Q(**{query_param_name + '__icontains': search_value})
+        # #search_filters |= Q(**{query_param_name + '__istartswith': search_value})
+        # search_filter = Q(**{query_param_name + '__icontains': search_value})
+
+        # See: "How do I do an OR filter in a Django query?"
+        # https://stackoverflow.com/questions/739776/how-do-i-do-an-or-filter-in-a-django-query
+        if type(search_value) == list:
+            search_filter = Q()
+            for item in search_value:
+                search_filter |= Q(**{query_param_name + '__icontains': item})
+        else:
+            search_filter = Q(**{query_param_name + '__icontains': search_value})
 
     return search_filter
