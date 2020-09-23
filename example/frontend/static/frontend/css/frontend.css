@@ -69,5 +69,19 @@ table.simpletable td {
     z-index: 3000;
 }
 
+.daterange input[type="date"] {
+    width: 145px;
+    font-size: 14px;
+}
+
+.dataTable thead th {
+    background-color: #333;
+    color: white;
+    border-color: #333 !important; }
+}
+
+.dataTables_paginate {
+    justify-content: center !important;
+}
 
 
