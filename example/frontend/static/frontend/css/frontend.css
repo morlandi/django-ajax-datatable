@@ -74,6 +74,14 @@ table.simpletable td {
     font-size: 14px;
 }
 
+.dataTable {
+    border: 2px solid #333;
+}
+
+.dataTable td:last-child {
+    border-right: 2px solid #333 !important;
+}
+
 .dataTable thead th {
     background-color: #333;
     color: white;
