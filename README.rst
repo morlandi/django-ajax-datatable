@@ -282,6 +282,8 @@ Optional:
 - disable_queryset_optimization = False
 - table_row_id_prefix = 'row-'
 - table_row_id_fieldname = 'id'
+- render_row_details_template_name = "render_row_details.html"
+- search_values_separator = ''
 
 or override the following methods to provide attribute values at run-time,
 based on request:
@@ -456,6 +458,23 @@ For example:
         ]
 
 .. image:: screenshots/column_filtering.png
+
+
+Filtering multiple values
+-------------------------
+
+Searching on multiple values can be obtained by assigning a "search value separator"
+as in the following example::
+
+    search_values_separator = '+'
+
+In this case, if the user inputs "aaa + bbb", the following search will be issued::
+
+    Q("aaa") | Q("bbb")
+
+This works for text search on both global and columns filters.
+
+TODO: test with dates, choices and autofilter.
 
 
 Computed (placeholder) columns
@@ -957,9 +976,11 @@ row details customization
 The default implementation of render_row_details() tries to load a template
 in the following order:
 
-- ajax_datatable/<app_label>/<model_name>/render_row_details.html
-- ajax_datatable/<app_label>/render_row_details.html
-- ajax_datatable/render_row_details.html
+- ajax_datatable/<app_label>/<model_name>/<render_row_details_template_name>
+- ajax_datatable/<app_label>/<render_row_details_template_name>
+- ajax_datatable/<render_row_details_template_name>
+
+(where the default value for <render_row_details_template_name> is "render_row_details.html")
 
 and, when found, uses it for rendering.
 

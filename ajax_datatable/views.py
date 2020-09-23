@@ -49,6 +49,8 @@ class AjaxDatatableView(View):
     length_menu = [[10, 20, 50, 100], [10, 20, 50, 100]]
     table_row_id_prefix = 'row-'
     table_row_id_fieldname = 'id'
+    render_row_details_template_name = 'render_row_details.html'
+    search_values_separator = '' # '+'
 
     # Set with self.initialize()
     column_specs = []  # used to keep column ording as required
@@ -395,9 +397,9 @@ class AjaxDatatableView(View):
         # Search a custom template for rendering, if available
         try:
             template = loader.select_template([
-                'ajax_datatable/%s/%s/render_row_details.html' % (self.model._meta.app_label, self.model._meta.model_name),
-                'ajax_datatable/%s/render_row_details.html' % (self.model._meta.app_label, ),
-                'ajax_datatable/render_row_details.html',
+                'ajax_datatable/%s/%s/%s' % (self.model._meta.app_label, self.model._meta.model_name, self.render_row_details_template_name),
+                'ajax_datatable/%s/%s' % (self.model._meta.app_label, self.render_row_details_template_name),
+                'ajax_datatable/%s' % (self.render_row_details_template_name, ),
             ])
             html = template.render({
                 'model': self.model,
@@ -785,6 +787,12 @@ class AjaxDatatableView(View):
 
             column_obj = self.column_obj(column_name)
             column_spec = self.column_spec_by_name(column_name)
+
+            # v4.0.2: we now accept multiple search values (to be ORed)
+            # Split search values;
+            # example: 'aaa + bbb' -> ['aaa ', ' bbb']
+            if self.search_values_separator and self.search_values_separator in search_value:
+                search_value = [t.strip() for t in search_value.split(self.search_values_separator)]
 
             column_filter = build_column_filter(column_name, column_obj, column_spec, search_value)
             if column_filter:
