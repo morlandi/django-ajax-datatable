@@ -2,7 +2,7 @@
 django-ajax-datatable
 =====================
 
-**django-ajax-datatable** is a Django app (previously named *morlandi/django-datatables-view*) which provides the integration of a Django
+**django-ajax-datatable** is a Django app (previously named *morlandi/django-datatables-view*) which provides advanced the integration of a Django
 project with the jQuery Javascript library DataTables.net,
 when used with server-side processing mode.
 
