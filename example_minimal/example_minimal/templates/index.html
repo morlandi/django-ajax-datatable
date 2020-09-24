@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrastyle %}
+    <link href="{% static 'ajax_datatable/css/style.css' %}" rel="stylesheet" />
+    <link href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+    <style>
+        body {
+            background-color: #eee;
+            padding: 40px;
+        }
+        table {
+            border: 2px solid #ccc;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        table th {
+            border: 1px solid #ccc;
+            background-color: #333;
+            color: #fff;
+        }
+        table td {
+            border: 1px solid #ccc;
+        }
+        .dataTables_filter input {
+            background-color: #ffe;
+            margin: 8px 0;
+        }
+        .datatable-column-filter-row input {
+            background-color: #ffe;
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+        .dataTables_paginate {
+            margin: 8px 0;
+        }
+        .paginate_button {
+            border: 1px solid #ccc;
+            padding: 4px;
+            cursor: pointer;
+            background-color: #ddd;
+        }
+
+    </style>
+
+{% endblock extrastyle %}
+
+
+{% block content %}
+    <h3>Minimal example for django-ajax-datatable</h3>
+    <table id="datatable_permissions">
+    </table>
+{% endblock content %}
+
+
+{% block extrajs %}
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="{% static 'ajax_datatable/js/utils.js' %}"></script>
+    <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+    <script language="javascript">
+
+        $(document).ready(function() {
+            AjaxDatatableViewUtils.initialize_table(
+                $('#datatable_permissions'),
+                "{% url 'ajax_datatable_permissions' %}",
+                {
+                    // extra_options (example)
+                    processing: false,
+                    autoWidth: false,
+                    full_row_select: true,
+                    scrollX: false
+                }, {
+                    // extra_data
+                    // ...
+                },
+            );
+        });
+
+    </script>
+
+{% endblock extrajs %}

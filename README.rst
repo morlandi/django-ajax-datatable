@@ -55,12 +55,15 @@ https://github.com/monnierj/django-datatables-server-side
 
 .. sectnum::
 
-Demo site
----------
+Demo site and examples
+----------------------
 
-A demo site is available at: http://django-ajax-datatable-demo.brainstorm.it/tracks/.
+A very minimal working Django project which uses `django-ajax-datatable` can be found in the folder `example_minimal`.
 
-The full source code is in the `example` folder of this package.
+A more realistic solution, with a frontend based on Bootstrap4, can be found in `example`,
+and is published as a demo site at the address: http://django-ajax-datatable-demo.brainstorm.it/.
+
+.. image:: screenshots/examples.png
 
 Installation
 ------------
@@ -95,7 +98,27 @@ Your base template should include what required by `datatables.net`, plus:
 - /static/ajax_datatable/css/style.css
 - /static/ajax_datatable/js/utils.js
 
-Example:
+Example (plain jQuery from CDN):
+
+.. code:: html
+
+    {% block extrastyle %}
+
+        <link href="{% static 'ajax_datatable/css/style.css' %}" rel="stylesheet" />
+        <link href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+    {% endblock extrastyle %}
+
+    {% block extrajs %}
+
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script type="text/javascript" src="{% static 'ajax_datatable/js/utils.js' %}"></script>
+        <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+    {% endcompress %}
+
+
+Example (with Bootstrap4 support):
 
 .. code:: html
 
@@ -126,7 +149,6 @@ Example:
     {% endcompress %}
 
 
-
 Basic AjaxDatatableView
 -----------------------
 
@@ -142,54 +164,40 @@ Example:
 .. code:: python
 
     from django.urls import path
-    from . import datatables_views
+    from . import ajax_datatable_views
 
     app_name = 'frontend'
 
     urlpatterns = [
         ...
-        path('datatable/registers/', datatables_views.RegisterAjaxDatatableView.as_view(), name="datatable_registers"),
+        path('ajax_datatable/permissions/', ajax_datatable_views.PermissionAjaxDatatableView.as_view(), name="ajax_datatable_permissions"),
     ]
 
 
-`datatables_views.py`
+`ajax_datatable_views.py`
 
 .. code:: python
 
-    from django.contrib.auth.decorators import login_required
-    from django.utils.decorators import method_decorator
-
     from ajax_datatable.views import AjaxDatatableView
-    from backend.models import Register
+    from django.contrib.auth.models import Permission
 
 
-    @method_decorator(login_required, name='dispatch')
-    class RegisterAjaxDatatableView(AjaxDatatableView):
+    class PermissionAjaxDatatableView(AjaxDatatableView):
 
-        model = Register
-        title = 'Registers'
+        model = Permission
+        title = 'Permissions'
+        initial_order = [["app_label", "asc"], ]
+        length_menu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, 'all']]
+        search_values_separator = '+'
 
         column_defs = [
-            {
-                'name': 'id',
-                'visible': False,
-            }, {
-                'name': 'created',
-            }, {
-                'name': 'type',
-            }, {
-                'name': 'address',
-            }, {
-                'name': 'readonly',
-            }, {
-                'name': 'min',
-            }, {
-                'name': 'max',
-            }, {
-                'name': 'widget_type',
-            }
+             AjaxDatatableView.render_row_tools_column_def(),
+            {'name': 'id', 'visible': False, },
+            {'name': 'codename', 'visible': True, },
+            {'name': 'name', 'visible': True, },
+            {'name': 'app_label', 'foreign_field': 'content_type__app_label', 'visible': True, },
+            {'name': 'model', 'foreign_field': 'content_type__model', 'visible': True, },
         ]
-
 
 In the previous example, row id is included in the first column of the table,
 but hidden to the user.
@@ -198,11 +206,9 @@ AjaxDatatableView will serialize the required data during table navigation;
 in order to render the initial web page which should contain the table,
 you need another "application" view, normally based on a template.
 
-`Usage: (file register_list.html)`
+`Usage: (file permissions_list.html)`
 
-.. code:: html
-
-    <table id="datatable_register" width="100%" class="table table-striped table-bordered">
+    <table id="datatable_permissions">
     </table>
 
     ...
@@ -211,8 +217,8 @@ you need another "application" view, normally based on a template.
 
         $(document).ready(function() {
             AjaxDatatableViewUtils.initialize_table(
-                $('#datatable_register'),
-                "{% url 'frontend:datatable_register' %}",
+                $('#datatable_permissions'),
+                "{% url 'ajax_datatable_permissions' %}",
                 {
                     // extra_options (example)
                     processing: false,
@@ -227,6 +233,7 @@ you need another "application" view, normally based on a template.
         });
 
     </script>
+
 
 In the template, insert a <table> element and connect it to the DataTable machinery,
 calling **AjaxDatatableViewUtils.initialize_table(element, url, extra_options={}, extra_data={})**, which will in turn
