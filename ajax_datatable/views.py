@@ -333,7 +333,7 @@ class AjaxDatatableView(View):
             values.append([position, direction])
         return values
 
-    #@method_decorator(csrf_exempt)
+    @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
 
         if not getattr(request, 'REQUEST', None):
