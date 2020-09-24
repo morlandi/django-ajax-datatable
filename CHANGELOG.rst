@@ -3,6 +3,10 @@
 History
 =======
 
+v4.0.5
+------
+* classifiers added to setup.py
+
 v4.0.4
 ------
 * fix Readme
