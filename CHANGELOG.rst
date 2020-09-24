@@ -3,6 +3,11 @@
 History
 =======
 
+v4.0.3
+------
+* [fix] accept anonymous POSTs
+* Another (this time really minimal) example working project
+
 v4.0.2
 ------
 * overridable `render_row_details_template_name` attribute added
