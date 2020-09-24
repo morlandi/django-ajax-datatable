@@ -152,61 +152,24 @@ Example (with Bootstrap4 support):
 Basic AjaxDatatableView
 -----------------------
 
-To provide server-side rendering of a Django Model, you need a specific
-view derived from AjaxDatatableView() which will be called multiple times via Ajax during data navigation.
+To provide server-side rendering of a Django Model, you will need:
 
-At the very minimum, you shoud specify a suitable `column_defs` list.
+1. an ordinary view which will render an HTML page containing:
 
-Example:
+    - an empty HTML <table> element
+    - a javascript code which links this HTML table to the (AjaxDatatableView-derived) second view
 
-`urls.py`
+2. a specific view derived from AjaxDatatableView() which will be called multiple times
+   via Ajax during data navigation; this second view has two duties:
 
-.. code:: python
+   - render the initial table layout based on specified columns
+   - respond to datatables.net requests, as a consequence of the user interaction with the table
 
-    from django.urls import path
-    from . import ajax_datatable_views
+**Example**:
 
-    app_name = 'frontend'
+We start by rendering an HTML page from this template:
 
-    urlpatterns = [
-        ...
-        path('ajax_datatable/permissions/', ajax_datatable_views.PermissionAjaxDatatableView.as_view(), name="ajax_datatable_permissions"),
-    ]
-
-
-`ajax_datatable_views.py`
-
-.. code:: python
-
-    from ajax_datatable.views import AjaxDatatableView
-    from django.contrib.auth.models import Permission
-
-
-    class PermissionAjaxDatatableView(AjaxDatatableView):
-
-        model = Permission
-        title = 'Permissions'
-        initial_order = [["app_label", "asc"], ]
-        length_menu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, 'all']]
-        search_values_separator = '+'
-
-        column_defs = [
-             AjaxDatatableView.render_row_tools_column_def(),
-            {'name': 'id', 'visible': False, },
-            {'name': 'codename', 'visible': True, },
-            {'name': 'name', 'visible': True, },
-            {'name': 'app_label', 'foreign_field': 'content_type__app_label', 'visible': True, },
-            {'name': 'model', 'foreign_field': 'content_type__model', 'visible': True, },
-        ]
-
-In the previous example, row id is included in the first column of the table,
-but hidden to the user.
-
-AjaxDatatableView will serialize the required data during table navigation;
-in order to render the initial web page which should contain the table,
-you need another "application" view, normally based on a template.
-
-`Usage: (file permissions_list.html)`
+file `permissions_list.html`
 
 .. code:: python
 
@@ -236,25 +199,74 @@ you need another "application" view, normally based on a template.
 
     </script>
 
+Here, "{% url 'ajax_datatable_permissions' %}" is the endpoint to the specialized view:
 
-In the template, insert a <table> element and connect it to the DataTable machinery,
-calling **AjaxDatatableViewUtils.initialize_table(element, url, extra_options={}, extra_data={})**, which will in turn
-perform a first call (identified by the `action=initialize` parameter)
-to render the initial table layout.
+file `urls.py`
 
-In this initial phase, the (base) view's responsibility is that of providing to DataTables
-the suitable columns specifications (and other details), based on the `column_defs`
-attribute specified in the (derived) view class.
+.. code:: python
 
-Then, subsequent calls to the view will be performed to populate the table with real data.
+    from django.urls import path
+    from . import ajax_datatable_views
+
+    app_name = 'frontend'
+
+    urlpatterns = [
+        ...
+        path('ajax_datatable/permissions/', ajax_datatable_views.PermissionAjaxDatatableView.as_view(), name="ajax_datatable_permissions"),
+    ]
+
+
+
+The javascript helper **AjaxDatatableViewUtils.initialize_table(element, url, extra_options={}, extra_data={})**
+connects the HTML table element to the "server-size table rendering" machinery, and performs
+a first call (identified by the `action=initialize` parameter) to the AjaxDatatableView-derived
+view.
+
+This in turn populates the HTML empty table with a suitable layout,
+while subsequent calls to the view will be performed to populate the table with real data.
 
 This strategy allows the placement of one or more dynamic tables in the same page.
 
-In simpler situations, where only one table is needed, you can use a single view
-(the one derived from AjaxDatatableView); the rendered page is based on the default
-template `ajax_datatable/database.html`, unless overridden.
+
+I often keep all AjaxDatatableView-derived views in a separate "ajax_datatable_views.py" source file,
+to make crystal clear that you should never call them directly:
+
+file `ajax_datatable_views.py`
+
+.. code:: python
+
+    from ajax_datatable.views import AjaxDatatableView
+    from django.contrib.auth.models import Permission
+
+
+    class PermissionAjaxDatatableView(AjaxDatatableView):
+
+        model = Permission
+        title = 'Permissions'
+        initial_order = [["app_label", "asc"], ]
+        length_menu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, 'all']]
+        search_values_separator = '+'
+
+        column_defs = [
+            AjaxDatatableView.render_row_tools_column_def(),
+            {'name': 'id', 'visible': False, },
+            {'name': 'codename', 'visible': True, },
+            {'name': 'name', 'visible': True, },
+            {'name': 'app_label', 'foreign_field': 'content_type__app_label', 'visible': True, },
+            {'name': 'model', 'foreign_field': 'content_type__model', 'visible': True, },
+        ]
+
+In the previous example, row id is included in the first column of the table,
+but hidden to the user.
+
+AjaxDatatableView will serialize the required data during table navigation.
+
 
 This is the resulting table:
+
+.. image:: screenshots/001a.png
+
+You can use common CSS style to customize the final rendering:
 
 .. image:: screenshots/001.png
 
