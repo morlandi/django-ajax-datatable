@@ -3,6 +3,10 @@
 History
 =======
 
+v4.0.4
+------
+* fix Readme
+
 v4.0.3
 ------
 * [fix] accept anonymous POSTs

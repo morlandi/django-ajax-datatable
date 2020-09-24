@@ -208,6 +208,8 @@ you need another "application" view, normally based on a template.
 
 `Usage: (file permissions_list.html)`
 
+.. code:: python
+
     <table id="datatable_permissions">
     </table>
 
