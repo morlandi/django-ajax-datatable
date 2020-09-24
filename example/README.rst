@@ -2,7 +2,7 @@
 Install
 =======
 
-Install Django dependencies:
+In your virtualenv, install Django dependencies:
 
 .. code-block:: bash
 

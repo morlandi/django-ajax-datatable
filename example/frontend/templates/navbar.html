@@ -2,6 +2,7 @@
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <a class="navbar-brand" href="/">django-ajax-datatable example</a>
+    {% if PROJECT_BUILD %}<small style="color: #ccc;">({{PROJECT_BUILD}})</small>{% endif %}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
