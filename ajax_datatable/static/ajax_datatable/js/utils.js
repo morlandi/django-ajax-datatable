@@ -196,7 +196,7 @@ window.AjaxDatatableViewUtils = (function() {
     };
 
 
-    function _bind_row_tools(table, url, full_row_select, custom_id='id')
+    function _bind_row_tools(table, url, full_row_select)
     {
         console.log('*** _bind_row_tools()');
         if (!full_row_select) {
@@ -209,7 +209,7 @@ window.AjaxDatatableViewUtils = (function() {
                     tr.removeClass('shown');
                 }
                 else {
-                    row.child(_load_row_details(row.data(), url, custom_id), 'details').show('slow');
+                    row.child(_load_row_details(row.data(), url), 'details').show('slow');
                     tr.addClass('shown');
                 }
             });
@@ -236,7 +236,7 @@ window.AjaxDatatableViewUtils = (function() {
                         this.child.hide();
                     });
                     if (!tr.hasClass('details')) {
-                        row.child(_load_row_details(row.data(), url, custom_id), 'details').show('slow');
+                        row.child(_load_row_details(row.data(), url), 'details').show('slow');
                         tr.addClass('shown');
                     }
                 }
@@ -244,7 +244,7 @@ window.AjaxDatatableViewUtils = (function() {
         }
     };
 
-    function _load_row_details(rowData, url, custom_id) {
+    function _load_row_details(rowData, url) {
         var div = $('<div/>')
             .addClass('row-details-wrapper loading')
             .text('Loading...');
@@ -254,7 +254,7 @@ window.AjaxDatatableViewUtils = (function() {
                 url: url,
                 data: {
                     action: 'details',
-                    id: rowData[custom_id]
+                    pk: rowData['pk']
                 },
                 dataType: 'json',
                 success: function(json) {

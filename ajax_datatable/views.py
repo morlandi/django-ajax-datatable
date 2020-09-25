@@ -48,7 +48,7 @@ class AjaxDatatableView(View):
     initial_order = [[1, "asc"]]
     length_menu = [[10, 20, 50, 100], [10, 20, 50, 100]]
     table_row_id_prefix = 'row-'
-    table_row_id_fieldname = 'id'
+    table_row_id_fieldname = 'pk'
     render_row_details_template_name = 'render_row_details.html'
     search_values_separator = '' # '+'
 
@@ -79,6 +79,11 @@ class AjaxDatatableView(View):
 
         # Grab column defs and initialize self.column_specs
         column_defs_ex = self.get_column_defs(request)
+
+        # Did the view class specifie a column named 'pk' ?
+        # If not, remember this since later we will promote the 'id' column, if any, to 'pk'.
+        has_pk = 'pk' in [c['name'] for c in column_defs_ex]
+
         self.column_specs = []
         for c in column_defs_ex:
 
@@ -115,22 +120,28 @@ class AjaxDatatableView(View):
             # Investigate !
             if c['name']:
 
+                name = c['name']
+
+                # 'pk' would be better, but we still accept 'id'
+                # unless a 'pk' column has been explicitly defined
+                if not has_pk and name == 'id':
+                    name = 'pk'
+
                 # Detect unexpected keys
                 for key in c.keys():
                     if not key in valid_keys:
-                        raise Exception('Unexpected key "%s" for column "%s"' % (key, c['name']))
+                        raise Exception('Unexpected key "%s" for column "%s"' % (key, name))
 
                 if 'title' in c:
                     title = c['title']
                 else:
                     try:
-                        title = self.model._meta.get_field(c['name']).verbose_name.title()
+                        title = self.model._meta.get_field(name).verbose_name.title()
                     except:
-                        title = c['name']
+                        title = name
 
-                column['name'] = c['name']
-                column['data'] = c['name']
-                #column['title'] = c.get('title') if 'title' in c else self.model._meta.get_field(c['name']).verbose_name.title()
+                column['name'] = name
+                column['data'] = name
                 column['title'] = title
                 column['searchable'] = c.get('searchable', column['visible'])
                 column['orderable'] = c.get('orderable', column['visible'])
@@ -390,9 +401,9 @@ class AjaxDatatableView(View):
             return admin.site._registry[self.model]
         return None
 
-    def render_row_details(self, id, request=None):
+    def render_row_details(self, pk, request=None):
 
-        obj = self.model.objects.get(id=id)
+        obj = self.model.objects.get(pk=pk)
 
         # Search a custom template for rendering, if available
         try:
