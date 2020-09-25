@@ -16,6 +16,6 @@ def tracks_list_view(request):
     template_name = "frontend/track/list.html"
 
     return render(request, template_name, {
-        'model': model,
+        #'model': model,
     })
 
