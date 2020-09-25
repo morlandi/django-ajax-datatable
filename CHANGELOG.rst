@@ -6,6 +6,7 @@ History
 v4.0.6
 ------
 * Accept the more generic "pk" column name instead of "id"; "id" still supported for backward compatibility
+* In the example project: a new page has been added to play with a model with a custom PK column name
 
 v4.0.5
 ------
