@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block page-title %}{% trans 'List Tracks' %}{% endblock page-title %}
+{% block page-title %}{% trans 'CustomPK table content' %}{% endblock page-title %}
 
 
 {% block content %}
 
     <p>
-    This tables show data collected from three 1-N related models: Track, Album and Artist
+    Managing a table with a PK named "auto_increment_id"
     </p>
 
     <div class="table-responsive">
@@ -26,7 +26,7 @@
         $( document ).ready(function() {
             AjaxDatatableViewUtils.initialize_table(
                 $('#datatable'),
-                "{% url 'frontend:ajax_datatable_track' %}",
+                "{% url 'frontend:ajax_datatable_custompk' %}",
                 {
                     // extra_options (example)
                     processing: false,

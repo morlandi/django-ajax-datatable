@@ -96,3 +96,12 @@ class Track(BaseModel):
         obj.description = increment_revision(self.description)
         obj.save()
         return obj
+
+################################################################################
+
+class CustomPk(models.Model):
+
+    # Primary key
+    auto_increment_id = models.AutoField(primary_key=True)
+    name = models.CharField(null=False, blank=False, max_length=256)
+

@@ -24,6 +24,7 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 from django.template.defaultfilters import truncatechars
 
 from backend.models import Track
+from backend.models import CustomPk
 
 
 User = get_user_model()
@@ -90,10 +91,25 @@ class TrackAjaxDatatableView(AjaxDatatableView):
 
     column_defs = [
         AjaxDatatableView.render_row_tools_column_def(),
-        {'name': 'id', 'visible': False, },
+        {'name': 'pk', 'visible': False, },
         {'name': 'name', 'visible': True, },
         {'name': 'album', 'foreign_field': 'album__name', 'visible': True, },
-        {'name': 'artist', 'foreign_field': 'album__artist__name', 'visible': True, 'choices': True, 'autofilter': True, },
+        {'name': 'artist', 'title':'Artist', 'foreign_field': 'album__artist__name', 'visible': True, 'choices': True, 'autofilter': True, },
         # {'name': 'username', }
     ]
+
+
+class CustomPkAjaxDatatableView(AjaxDatatableView):
+
+    model = CustomPk
+    code = 'custompk'
+    initial_order = [["name", "asc"], ]
+    length_menu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, 'all']]
+
+    column_defs = [
+        #AjaxDatatableView.render_row_tools_column_def(),
+        {'name': 'pk', 'visible': True, },
+        {'name': 'name', 'visible': True, },
+    ]
+
 

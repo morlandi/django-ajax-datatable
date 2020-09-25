@@ -3,6 +3,10 @@
 History
 =======
 
+v4.0.6
+------
+* Accept the more generic "pk" column name instead of "id"; "id" still supported for backward compatibility
+
 v4.0.5
 ------
 * classifiers added to setup.py

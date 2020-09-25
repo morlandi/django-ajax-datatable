@@ -5,6 +5,7 @@ from django.utils import timezone
 from .models import Artist
 from .models import Album
 from .models import Track
+from .models import CustomPk
 
 
 ################################################################################
@@ -71,3 +72,9 @@ class TrackAdmin(BaseModelAdmin):
         items = self.list_display[:]
         items.insert(1, 'album')
         return items
+
+################################################################################
+
+@admin.register(CustomPk)
+class CustomPkAdmin(admin.ModelAdmin):
+    list_display= ['pk', 'name', ]
