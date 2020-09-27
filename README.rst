@@ -696,8 +696,8 @@ Example:
 
 .. code:: python
 
-    def render_row_details(self, id, request=None):
-        client = self.model.objects.get(id=id)
+    def render_row_details(self, pk, request=None):
+        client = self.model.objects.get(pk=pk)
         ...
         return render_to_string('frontend/pages/includes/client_row_details.html', {
             'client': client,
@@ -985,7 +985,7 @@ Row details are automatically collected via Ajax by calling again the views
 with a specific **?action=details** parameters, and will be rendered by the
 method::
 
-    def render_row_details(self, id, request=None)
+    def render_row_details(self, pk, request=None)
 
 which you can further customize when needed.
 
@@ -1456,9 +1456,9 @@ Customize row details by rendering prettified json fields
 
         ...
 
-        def render_row_details(self, id, request=None):
+        def render_row_details(self, pk, request=None):
 
-            obj = self.model.objects.get(id=id)
+            obj = self.model.objects.get(pk=pk)
             fields = [f for f in self.model._meta.get_fields() if f.concrete]
             html = '<table class="row-details">'
             for field in fields:
@@ -1598,9 +1598,9 @@ Row details customization:
 
 .. code:: javascript
 
-    def render_row_details(self, id, request=None):
+    def render_row_details(self, pk, request=None):
 
-        obj = self.model.objects.get(id=id)
+        obj = self.model.objects.get(pk=pk)
         html = '<table class="row-details">'
         html += "<tr><td>alarm status:</td><td>"
         for choice in BaseTask.ALARM_STATUS_CHOICES:
@@ -1612,7 +1612,7 @@ Row details customization:
                 # (tutti tranne "unalarmed")
                 if obj.alarm != BaseTask.ALARM_STATUS_UNALARMED and choice[0] != BaseTask.ALARM_STATUS_UNALARMED:
                     html += '<a class="set-alarm" href="#" onclick="set_row_alarm(this, \'%s\', %d); return false">%s</a>&nbsp;' % (
-                        str(obj.id),
+                        str(obj.pk),
                         choice[0],
                         choice[1]
                     )

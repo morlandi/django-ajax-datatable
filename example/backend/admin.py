@@ -2,11 +2,16 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+from .models import Tag
 from .models import Artist
 from .models import Album
 from .models import Track
 from .models import CustomPk
 
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    pass
 
 ################################################################################
 # BaseModelAdmin
@@ -17,7 +22,7 @@ class BaseModelAdmin(admin.ModelAdmin):
     manages common metadata
     """
     date_hierarchy = 'created'
-    search_fields = ['=id', ]
+    search_fields = ['=id', 'name', ]
     list_display = [
         '__str__',
         'view_on_site_link',
@@ -67,6 +72,7 @@ class AlbumAdmin(BaseModelAdmin):
 class TrackAdmin(BaseModelAdmin):
 
     list_filter = BaseModelAdmin.list_filter + ['album__artist', ]
+    filter_horizontal = ['tags', ]
 
     def get_list_display(self, request):
         items = self.list_display[:]

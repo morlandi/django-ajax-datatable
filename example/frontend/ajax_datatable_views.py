@@ -23,7 +23,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.template.defaultfilters import truncatechars
 
+from project.query_debugger import query_debugger
 from backend.models import Track
+from backend.models import Album
+from backend.models import Artist
 from backend.models import CustomPk
 
 
@@ -95,7 +98,54 @@ class TrackAjaxDatatableView(AjaxDatatableView):
         {'name': 'name', 'visible': True, },
         {'name': 'album', 'foreign_field': 'album__name', 'visible': True, },
         {'name': 'artist', 'title':'Artist', 'foreign_field': 'album__artist__name', 'visible': True, 'choices': True, 'autofilter': True, },
-        # {'name': 'username', }
+        {'name': 'tags', 'visible': True, },
+    ]
+
+    @query_debugger
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_initial_queryset(self, request=None):
+        # Optimization: Reduce the number of queries due to ManyToMany "tags" relation
+        return Track.objects.prefetch_related('tags')
+
+    def customize_row(self, row, obj):
+        # 'row' is a dictionary representing the current row, and 'obj' is the current object.
+        # Display tags as a list of strings
+        row['tags'] = ','.join( [t.name for t in obj.tags.all()])
+        return
+
+
+class AlbumAjaxDatatableView(AjaxDatatableView):
+
+    model = Album
+    code = 'album'
+    title = _('Album')
+    initial_order = [["name", "asc"], ]
+    length_menu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, 'all']]
+    search_values_separator = '+'
+
+    column_defs = [
+        AjaxDatatableView.render_row_tools_column_def(),
+        {'name': 'pk', 'visible': False, },
+        {'name': 'name', 'visible': True, },
+        {'name': 'artist', 'title':'Artist', 'foreign_field': 'artist__name', 'visible': True, 'choices': True, 'autofilter': True, },
+    ]
+
+
+class ArtistAjaxDatatableView(AjaxDatatableView):
+
+    model = Artist
+    code = 'artist'
+    title = _('Artist')
+    initial_order = [["name", "asc"], ]
+    length_menu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, 'all']]
+    search_values_separator = '+'
+
+    column_defs = [
+        AjaxDatatableView.render_row_tools_column_def(),
+        {'name': 'pk', 'visible': False, },
+        {'name': 'name', 'visible': True, },
     ]
 
 

@@ -15,6 +15,8 @@ urlpatterns = [
 
     path('tracks/', views.tracks_list_view, name="tracks-list"),
     path('ajax_datatable/tracks/', ajax_datatable_views.TrackAjaxDatatableView.as_view(), name="ajax_datatable_track"),
+    path('ajax_datatable/album/', ajax_datatable_views.AlbumAjaxDatatableView.as_view(), name="ajax_datatable_album"),
+    path('ajax_datatable/artist/', ajax_datatable_views.ArtistAjaxDatatableView.as_view(), name="ajax_datatable_artist"),
 
     path('custompks/', TemplateView.as_view(template_name='frontend/custompk/list.html'), name="custompks-list"),
     path('ajax_datatable/custompks/', ajax_datatable_views.CustomPkAjaxDatatableView.as_view(), name="ajax_datatable_custompk"),

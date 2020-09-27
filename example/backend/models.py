@@ -8,6 +8,13 @@ from django.utils.translation import ugettext_lazy as _
 from ajax_datatable.utils import format_datetime
 
 
+class Tag(models.Model):
+    name = models.CharField(null=False, blank=False, max_length=256)
+
+    def __str__(self):
+        return self.name
+
+
 ################################################################################
 # BaseModel
 
@@ -81,6 +88,7 @@ class Track(BaseModel):
 
     album = models.ForeignKey(Album, on_delete=models.CASCADE, null=False, blank=False)
     position = models.IntegerField(default=0, null=False, blank=False)
+    tags = models.ManyToManyField(Tag)
 
     class Meta(BaseModel.Meta):
         abstract = False
@@ -96,6 +104,7 @@ class Track(BaseModel):
         obj.description = increment_revision(self.description)
         obj.save()
         return obj
+
 
 ################################################################################
 

@@ -10,8 +10,24 @@
     This tables show data collected from three 1-N related models: Track, Album and Artist
     </p>
 
+    <h3>Tracks</h3>
+
     <div class="table-responsive">
-        <table id="datatable" width="100%" class="table table-striped table-bordered dt-responsive compact nowrap">
+        <table id="datatable-track" width="100%" class="table table-striped table-bordered dt-responsive compact nowrap">
+        </table>
+    </div>
+
+    <h3>Albums</h3>
+
+    <div class="table-responsive">
+        <table id="datatable-album" width="100%" class="table table-striped table-bordered dt-responsive compact nowrap">
+        </table>
+    </div>
+
+    <h3>Artists</h3>
+
+    <div class="table-responsive">
+        <table id="datatable-artist" width="100%" class="table table-striped table-bordered dt-responsive compact nowrap">
         </table>
     </div>
 
@@ -24,8 +40,9 @@
     <script language="javascript">
 
         $( document ).ready(function() {
+
             AjaxDatatableViewUtils.initialize_table(
-                $('#datatable'),
+                $('#datatable-track'),
                 "{% url 'frontend:ajax_datatable_track' %}",
                 {
                     // extra_options (example)
@@ -37,7 +54,37 @@
                     // extra_data
                     // ...
                 },
-                );
+            );
+
+            AjaxDatatableViewUtils.initialize_table(
+                $('#datatable-album'),
+                "{% url 'frontend:ajax_datatable_album' %}",
+                {
+                    // extra_options (example)
+                    processing: false,
+                    autoWidth: false,
+                    full_row_select: true,
+                    scrollX: false
+                }, {
+                    // extra_data
+                    // ...
+                },
+            );
+
+            AjaxDatatableViewUtils.initialize_table(
+                $('#datatable-artist'),
+                "{% url 'frontend:ajax_datatable_artist' %}",
+                {
+                    // extra_options (example)
+                    processing: false,
+                    autoWidth: false,
+                    full_row_select: true,
+                    scrollX: false
+                }, {
+                    // extra_data
+                    // ...
+                },
+            );
         });
 
     </script>
