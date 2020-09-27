@@ -3,6 +3,11 @@
 History
 =======
 
+v4.0.x
+------
+* [TODO] check for unwanted side-effects here:
+* Prevent click to move the HTML page to the top
+
 v4.0.6
 ------
 * Accept the more generic "pk" column name instead of "id"; "id" still supported for backward compatibility
