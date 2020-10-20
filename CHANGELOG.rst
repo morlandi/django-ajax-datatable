@@ -3,6 +3,10 @@
 History
 =======
 
+v4.0.8
+------
+* Recover missing commits from develp
+
 v4.0.7
 ------
 * [TODO] check for unwanted side-effects here: ...
