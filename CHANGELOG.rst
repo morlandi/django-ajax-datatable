@@ -3,10 +3,11 @@
 History
 =======
 
-v4.0.x
+v4.0.7
 ------
-* [TODO] check for unwanted side-effects here:
-* Prevent click to move the HTML page to the top
+* [TODO] check for unwanted side-effects here: ...
+* ... Prevent click to move the HTML page to the top
+* Improved example project
 
 v4.0.6
 ------

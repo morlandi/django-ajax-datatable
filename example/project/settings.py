@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import sys
 import subprocess
 import project
 
@@ -26,7 +27,7 @@ try:
 except:
     project.__build__ = ""
 
-print('build: %s' % project.__build__)
+print('build: %s' % project.__build__, file=sys.stderr)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -174,6 +175,6 @@ AJAX_DATATABLE_DISABLE_QUERYSET_OPTIMIZATION = False
 # Load local settings when supplied
 try:
     from project.local import *
-    print('Local settings loaded !')
+    print('Local settings loaded !', file=sys.stderr)
 except ModuleNotFoundError as e:
     pass
