@@ -229,7 +229,7 @@ This strategy allows the placement of one or more dynamic tables in the same pag
 
 
 I often keep all AjaxDatatableView-derived views in a separate "ajax_datatable_views.py" source file,
-to make crystal clear that you should never call them directly:
+to make it crystal clear that you should never call them directly:
 
 file `ajax_datatable_views.py`
 
@@ -283,7 +283,8 @@ AjaxDatatableViewUtils.initialize_table() parameters are:
         custom options for dataTable()
 
     extra_data={}
-        extra parameters to be sent via ajax for custom filtering
+        extra parameters to be sent via ajax for global "initial queryset" filtering;
+        see: `Provide "extra data" to narrow down the initial queryset`_
 
 
 AjaxDatatableView Class attributes
