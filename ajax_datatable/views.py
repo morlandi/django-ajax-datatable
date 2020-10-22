@@ -831,7 +831,20 @@ class AjaxDatatableView(View):
         if self.latest_by and (date_from or date_to):
 
             daterange_filter = Q()
-            is_datetime = isinstance(self.latest_by, models.DateTimeField)
+
+            # Check if "latest_by" field is a DateField or a DateTimeField,
+            # since in the latter case we need to issue a specific comparison
+            # to get rid of time
+
+            # BUG: self.latest_by is non a string (the fieldname) ...
+            #is_datetime = isinstance(self.latest_by, models.DateTimeField)
+
+            # ... so lookup the model_field, instead
+            try:
+                latest_by_field = self.column_obj(self.latest_by).model_field
+                is_datetime = isinstance(latest_by_field, models.DateTimeField)
+            except:
+                is_datetime = False
 
             if date_from:
                 dt = datetime.datetime.strptime(date_from, '%Y-%m-%d').date()
