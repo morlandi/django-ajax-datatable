@@ -29,14 +29,19 @@
 }
 
 
-td.dataTables_row-tools {
+.dataTables_wrapper td.dataTables_row-tools {
     /*cursor: pointer;*/
 }
-td.dataTables_row-tools .minus { display: none; }
-td.dataTables_row-tools .plus { display: inline; }
+.dataTables_wrapper td.dataTables_row-tools .minus { display: none; }
+.dataTables_wrapper td.dataTables_row-tools .plus { display: inline; }
 
-tr.shown td.dataTables_row-tools .minus { display: inline; }
-tr.shown td.dataTables_row-tools .plus { display: none; }
+.dataTables_wrapper tr.shown td.dataTables_row-tools .minus { display: inline; }
+.dataTables_wrapper tr.shown td.dataTables_row-tools .plus { display: none; }
+
+.dataTables_wrapper .dataTables_row-tools a {
+    border: 1px solid #ccc;
+    padding: 0px 4px 2px 4px;
+}
 
 /*table.details {
     padding-left: 80px;
