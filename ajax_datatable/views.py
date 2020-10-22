@@ -65,6 +65,8 @@ class AjaxDatatableView(View):
 
     disable_queryset_optimization = False
 
+    _id_column_renamed_as_pk = False
+
     def initialize(self, request):
 
         # Retrieve and normalize latest_by fieldname
@@ -127,6 +129,7 @@ class AjaxDatatableView(View):
                 # unless a 'pk' column has been explicitly defined
                 if not has_pk and name == 'id':
                     name = 'pk'
+                    self._id_column_renamed_as_pk = True
 
                 # Detect unexpected keys
                 for key in c.keys():
@@ -341,6 +344,10 @@ class AjaxDatatableView(View):
         keys = list(self.column_index.keys())
         for position, direction in initial_order:
             if type(position) == str:
+
+                if position == 'id' and self._id_column_renamed_as_pk:
+                    position = 'pk'
+
                 if position in keys:
                     position = keys.index(position)
                 else:
