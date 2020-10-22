@@ -150,6 +150,10 @@ class AjaxDatatableView(View):
                 column['searchable'] = c.get('searchable', column['visible'])
                 column['orderable'] = c.get('orderable', column['visible'])
 
+            # Make sure no duplicate column names exist
+            if column['name'] in [c['name'] for c in self.column_specs]:
+                raise Exception('Duplicate column name "%s" detected' % column['name'])
+
             self.column_specs.append(column)
 
         # # build LUT for column objects
@@ -376,7 +380,7 @@ class AjaxDatatableView(View):
                     if col >= len(self.column_specs):
                         raise Exception('Initial order column %d does not exists' % col)
                     elif not self.column_specs[col]['orderable']:
-                        raise Exception('Column %d is not orderable' % col)
+                        raise Exception('Column %d ("%s") is not orderable' % (col, self.column_specs[col]['name'], ))
 
                 # Initial values for column filters, when supplied
                 # See: https://datatables.net/reference/option/searchCols
