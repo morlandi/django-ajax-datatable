@@ -32,8 +32,9 @@ from .utils import trace
 from .utils import format_datetime
 from .filters import build_column_filter
 from .app_settings import MAX_COLUMNS
-from .app_settings import ENABLE_QUERYSET_TRACING
-from .app_settings import ENABLE_QUERYDICT_TRACING
+from .app_settings import TRACE_COLUMNDEFS
+from .app_settings import TRACE_QUERYDICT
+from .app_settings import TRACE_QUERYSET
 from .app_settings import TEST_FILTERS
 from .app_settings import DISABLE_QUERYSET_OPTIMIZATION
 
@@ -251,7 +252,7 @@ class AjaxDatatableView(View):
             show_column_filters = (num_searchable_columns > 0)
         self.show_column_filters = show_column_filters
 
-        if ENABLE_QUERYDICT_TRACING:
+        if TRACE_COLUMNDEFS:
             trace(self.column_specs, prompt='column_specs')
 
     def get_column_defs(self, request):
@@ -493,7 +494,7 @@ class AjaxDatatableView(View):
         except ValueError:
             return HttpResponseBadRequest()
 
-        if ENABLE_QUERYDICT_TRACING:
+        if TRACE_QUERYDICT:
             trace(query_dict, prompt='query_dict')
             trace(params, prompt='params')
 
@@ -502,7 +503,7 @@ class AjaxDatatableView(View):
         if not DISABLE_QUERYSET_OPTIMIZATION and not self.disable_queryset_optimization:
             qs = self.optimize_queryset(qs)
         qs = self.prepare_queryset(params, qs)
-        if ENABLE_QUERYSET_TRACING:
+        if TRACE_QUERYSET:
             prettyprint_queryset(qs)
 
         # Slice result
@@ -519,7 +520,7 @@ class AjaxDatatableView(View):
             content_type="application/json")
 
         # Trace elapsed time
-        if ENABLE_QUERYSET_TRACING:
+        if TRACE_QUERYSET:
             td = datetime.datetime.now() - t0
             ms = (td.seconds * 1000) + (td.microseconds / 1000.0)
             trace('%d [ms]' % ms, prompt="Table rendering time")
