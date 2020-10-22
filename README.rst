@@ -404,6 +404,66 @@ Notes:
       to the HTML table, but in some situations this causes problems in the computation
       of the table columns' widths (at least in the current version 1.10.19 of Datatables.net)
 
+Provide "extra data" to narrow down the initial queryset
+--------------------------------------------------------
+
+Sometimes you might need to restrict the initial queryset based on the context.
+
+To that purpose, you can provide a dictionary of additional filters during table initialization;
+this dictionary will be sent to the View, where you can use it for queryset filtering.
+
+Provide as many key as required; assign either constant values or callables.
+The special keys 'date_from' and 'date_to' may be used to override values collected
+by the optional global date range filter (format: 'YYYY-MM-DD').
+
+Example:
+
+.. code:: javascript
+
+        AjaxDatatableViewUtils.initialize_table(
+            element,
+            url,
+            {
+                // extra_options (example)
+                processing: false,
+                autoWidth: false,
+                full_row_select: false,
+                scrollX: true,
+                bFilter: false
+            }, {
+                // extra_data
+                client_id: '{{client.id}}',
+                date_from: function() { return date_input_to_isoformat('#date_from'); },
+                date_to: function() { return date_input_to_isoformat('#date_to'); }
+            }
+        );
+
+then:
+
+.. code:: python
+
+    class SampleAjaxDatatableView(AjaxDatatableView):
+
+        ...
+
+        def get_initial_queryset(self, request=None):
+
+            if not request.user.is_authenticated:
+                raise PermissionDenied
+
+            # We accept either GET or POST
+            if not getattr(request, 'REQUEST', None):
+                request.REQUEST = request.GET if request.method=='GET' else request.POST
+
+            queryset = self.model.objects.all()
+
+            if 'client_id' in request.REQUEST:
+                client_id = int(request.REQUEST.get('client_id'))
+                queryset = queryset.filter(client_id=client_id)
+
+            return queryset
+
+
 Automatic addition of table row ID
 ----------------------------------
 
@@ -913,15 +973,21 @@ AJAX_DATATABLE_MAX_COLUMNS
 
     Default: 30
 
-AJAX_DATATABLE_ENABLE_QUERYDICT_TRACING
+AJAX_DATATABLE_TRACE_COLUMNDEFS
+
+    When True, enables debug tracing of applied column defs
+
+    Default: False
+
+AJAX_DATATABLE_TRACE_QUERYDICT
 
     When True, enables debug tracing of datatables requests
 
     Default: False
 
-AJAX_DATATABLE_ENABLE_QUERYSET_TRACING
+AJAX_DATATABLE_TRACE_QUERYSET
 
-    When True, enables debug tracing of resulting query
+    When True, enables debug tracing of applied query
 
     Default: False
 
@@ -1093,13 +1159,14 @@ You can change it to trace the error in the browser console, insted:
     $.fn.dataTable.ext.errMode = 'throw';
 
 All details of Datatables.net requests can be logged to the console by activating
-this setting::
+these setting::
 
-    AJAX_DATATABLE_ENABLE_QUERYDICT_TRACING = True
+    AJAX_DATATABLE_TRACE_COLUMNDEFS = True
+    AJAX_DATATABLE_TRACE_QUERYDICT = True
 
 The resulting query (before pagination) can be traced as well with::
 
-    AJAX_DATATABLE_ENABLE_QUERYSET_TRACING = True
+    AJAX_DATATABLE_TRACE_QUERYSET = True
 
 Debugging traces for date range filtering, column filtering or global filtering can be displayed
 by activating this setting::
