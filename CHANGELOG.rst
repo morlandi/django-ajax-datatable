@@ -3,6 +3,17 @@
 History
 =======
 
+v4.1.0
+------
+Avoid duplicate column names
+Add a border to "plus" and "minus" icons
+Readme: added an example on how to use extra_data for initial queryset filtering
+Improved layout of global date filters for easier style customization
+Explicitly check field existence when initial order is expressed with fieldnames
+Cleanup full_row_select option
+[fix] Treat DateTimeField properly in filter_queryset_by_date_range()
+App settings for debug tracing renamed
+
 v4.0.8
 ------
 * Recover missing commits from develp
