@@ -341,7 +341,11 @@ class AjaxDatatableView(View):
         keys = list(self.column_index.keys())
         for position, direction in initial_order:
             if type(position) == str:
-                position = keys.index(position)
+                if position in keys:
+                    position = keys.index(position)
+                else:
+                    error_message = 'Order key "%s" is invalid; available keys: "%s"' % (position, ','.join(keys))
+                    raise Exception(error_message)
             values.append([position, direction])
         return values
 
