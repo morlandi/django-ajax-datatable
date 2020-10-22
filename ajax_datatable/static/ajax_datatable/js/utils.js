@@ -199,24 +199,13 @@ window.AjaxDatatableViewUtils = (function() {
     function _bind_row_tools(table, url, full_row_select)
     {
         console.log('*** _bind_row_tools()');
-        if (!full_row_select) {
-            table.api().on('click', 'td.dataTables_row-tools .plus, td.dataTables_row-tools .minus', function(event) {
-                event.preventDefault();
-                var tr = $(this).closest('tr');
-                var row = table.api().row(tr);
-                if (row.child.isShown()) {
-                    row.child.hide();
-                    tr.removeClass('shown');
-                }
-                else {
-                    row.child(_load_row_details(row.data(), url), 'details').show('slow');
-                    tr.addClass('shown');
-                }
-            });
-        }
-        else {
+
+        if (full_row_select) {
+
+            // Full row select: when user clicks anywhere in the row,
+            // expand it to show further details
             table.api().on('click', 'td', function(event) {
-                event.preventDefault();
+                //event.preventDefault();
                 var tr = $(this).closest('tr');
 
                 // Dont' close child when clicking inside child itself,
@@ -239,6 +228,23 @@ window.AjaxDatatableViewUtils = (function() {
                         row.child(_load_row_details(row.data(), url), 'details').show('slow');
                         tr.addClass('shown');
                     }
+                }
+            });
+        }
+        else {
+
+            // Use "plus" and "minus" links to toggle row details
+            table.api().on('click', 'td.dataTables_row-tools .plus, td.dataTables_row-tools .minus', function(event) {
+                event.preventDefault();
+                var tr = $(this).closest('tr');
+                var row = table.api().row(tr);
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    row.child(_load_row_details(row.data(), url), 'details').show('slow');
+                    tr.addClass('shown');
                 }
             });
         }
