@@ -821,7 +821,12 @@ class AjaxDatatableView(View):
             if self.search_values_separator and self.search_values_separator in search_value:
                 search_value = [t.strip() for t in search_value.split(self.search_values_separator)]
 
-            column_filter = build_column_filter(column_name, column_obj, column_spec, search_value)
+            try:
+                column_filter = build_column_filter(column_name, column_obj, column_spec, search_value)
+            except Exception as e:
+                import ipdb; ipdb.set_trace()
+                column_filter = None
+
             if column_filter:
                 search_filters |= column_filter
                 if TEST_FILTERS:
