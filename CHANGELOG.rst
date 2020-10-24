@@ -3,6 +3,11 @@
 History
 =======
 
+v4.1.1
+------
+* [fix] Restore capability to use both global and column filtering at the same time
+* improved tracing (optionally uses sqlparse, termcolor and pygments)
+
 v4.1.0
 ------
 * Avoid duplicate column names
