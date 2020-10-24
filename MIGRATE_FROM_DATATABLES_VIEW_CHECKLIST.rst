@@ -8,3 +8,14 @@ Howto migrate your Django project from django-datatables-view to django-ajax-dat
 - in your templates, replace `DatatablesViewUtils` with `AjaxDatatableViewUtils`
 - in your templates, if you included `datatables_view/js/datatables_utils.js`, include `ajax_datatable/js/utils.js` instead
 - in your derived view classes, replace the base class from `DatatablesView` to `AjaxDatatableView`
+
+Since v4.1.0, these settings:
+
+- AJAX_DATATABLE_ENABLE_QUERYDICT_TRACING
+- AJAX_DATATABLE_ENABLE_QUERYSET_TRACING
+
+have been replaced by:
+
+- AJAX_DATATABLE_TRACE_COLUMNDEFS
+- AJAX_DATATABLE_TRACE_QUERYDICT
+- AJAX_DATATABLE_TRACE_QUERYSET
