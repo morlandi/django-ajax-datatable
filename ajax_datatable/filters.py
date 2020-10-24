@@ -5,7 +5,7 @@ from django.db import models
 from .utils import parse_date
 
 
-def build_column_filter(column_name, column_obj, column_spec, search_value):
+def build_column_filter(column_name, column_obj, column_spec, search_value, global_filtering):
     search_filter = None
 
     # v4.0.2: we now accept multiple search values (to be ORed),
@@ -15,10 +15,10 @@ def build_column_filter(column_name, column_obj, column_spec, search_value):
     # if type(column_obj.model_field) == fields.CharField:
     #     # do something special with this field
 
-    choices = column_spec['choices']
     if column_obj.has_choices_available:
 
-        if choices:
+        choices = column_spec['choices']
+        if choices and not global_filtering:
             # Since we're using choices (we provided a select box)
             # just use the selected key
             values = [search_value, ]

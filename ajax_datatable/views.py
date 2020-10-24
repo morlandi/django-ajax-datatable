@@ -260,7 +260,7 @@ class AjaxDatatableView(View):
         self.show_column_filters = show_column_filters
 
         if TRACE_COLUMNDEFS:
-            trace(self.column_specs, prompt='column_specs')
+            trace(json.dumps(self.column_specs, indent=2), prompt='column_specs')
 
     def get_column_defs(self, request):
         """
@@ -510,8 +510,8 @@ class AjaxDatatableView(View):
             return HttpResponseBadRequest()
 
         if TRACE_QUERYDICT:
-            trace(query_dict, prompt='query_dict')
-            trace(params, prompt='params')
+            trace(json.dumps(query_dict, indent=2), prompt='query_dict')
+            trace(params, prompt='params', prettify=True)
 
         # Prepare the queryset and apply the search and order filters
         qs = self.get_initial_queryset(request)
@@ -804,10 +804,13 @@ class AjaxDatatableView(View):
         ]
         return Q(**{column + '__in': matching_choices})
 
-    def _filter_queryset(self, column_names, search_value, qs):
+    def _filter_queryset(self, column_names, search_value, qs, global_filtering):
 
         if TEST_FILTERS:
-            trace(', '.join(column_names), 'Filtering "%s" over fields' % search_value)
+            trace(
+                ', '.join(column_names),
+                prompt='%s filtering "%s" over fields' % ('Global' if global_filtering else 'Column', search_value)
+            )
 
         search_filters = Q()
         for column_name in column_names:
@@ -821,30 +824,24 @@ class AjaxDatatableView(View):
             if self.search_values_separator and self.search_values_separator in search_value:
                 search_value = [t.strip() for t in search_value.split(self.search_values_separator)]
 
-            try:
-                column_filter = build_column_filter(column_name, column_obj, column_spec, search_value)
-            except Exception as e:
-                import ipdb; ipdb.set_trace()
-                column_filter = None
-
+            column_filter = build_column_filter(column_name, column_obj, column_spec, search_value, global_filtering)
             if column_filter:
                 search_filters |= column_filter
                 if TEST_FILTERS:
-                    trace(column_name, "Test filter")
                     qstest = qs.filter(column_filter)
-                    trace('%d/%d records filtered' % (qstest.count(), qs.count()))
+                    trace('%8d/%8d records filtered over column "%s"' % (qstest.count(), qs.count(), column_name, ))
 
         if TEST_FILTERS:
-            trace(search_filters, prompt='Search filters')
+            trace(search_filters)
 
         return qs.filter(search_filters)
 
     def filter_queryset_all_columns(self, search_value, qs):
         searchable_columns = [c['name'] for c in self.column_specs if c['searchable']]
-        return self._filter_queryset(searchable_columns, search_value, qs)
+        return self._filter_queryset(searchable_columns, search_value, qs, True)
 
     def filter_queryset_by_column(self, column_name, search_value, qs):
-        return self._filter_queryset([column_name, ], search_value, qs)
+        return self._filter_queryset([column_name, ], search_value, qs, False)
 
     def filter_queryset_by_date_range(self, date_from, date_to, qs):
 

@@ -89,6 +89,12 @@ then add 'ajax_datatable' to your INSTALLED_APPS:
         'ajax_datatable',
     ]
 
+Optional dependencies (for better debug tracing):
+
+    - sqlparse
+    - termcolor
+    - pygments
+
 
 Pre-requisites
 --------------
