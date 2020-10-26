@@ -334,9 +334,15 @@ window.AjaxDatatableViewUtils = (function() {
 
     function initialize_table(element, url, extra_options={}, extra_data={}) {
 
+        var data = {action: 'initialize'};
+        if (extra_data) {
+            Object.assign(data, extra_data);
+        }
         $.ajax({
             type: 'GET',
-            url: url + '?action=initialize',
+            //url: url + '?action=initialize',
+            url: url,
+            data: data,
             dataType: 'json'
         }).done(function(data, textStatus, jqXHR) {
 

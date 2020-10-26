@@ -3,6 +3,10 @@
 History
 =======
 
+v4.1.2
+------
+* pass "extra_data" during table initialization
+
 v4.1.1
 ------
 * [fix] Restore capability to use both global and column filtering at the same time
