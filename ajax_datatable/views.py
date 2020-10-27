@@ -220,7 +220,8 @@ class AjaxDatatableView(View):
                         # else:
                         #     choices = [(c[0], self.clip_value(c[1], max_length, False)) for c in choices]
                         #
-                        choices = choices[:]
+                        #choices = choices[:]
+                        choices = [[c[0], str(c[1])] for c in choices]
 
                 # ... or collect distict values if 'autofilter' has been enabled
                 if len(choices) <= 0 and cs['autofilter']:
@@ -260,7 +261,7 @@ class AjaxDatatableView(View):
         self.show_column_filters = show_column_filters
 
         if TRACE_COLUMNDEFS:
-            trace(json.dumps(self.column_specs, indent=2), prompt='column_specs')
+            trace(json.dumps(self.column_specs, indent=2, cls=DjangoJSONEncoder), prompt='column_specs')
 
     def get_column_defs(self, request):
         """
@@ -510,7 +511,7 @@ class AjaxDatatableView(View):
             return HttpResponseBadRequest()
 
         if TRACE_QUERYDICT:
-            trace(json.dumps(query_dict, indent=2), prompt='query_dict')
+            trace(json.dumps(query_dict, indent=2, cls=DjangoJSONEncoder), prompt='query_dict')
             trace(params, prompt='params', prettify=True)
 
         # Prepare the queryset and apply the search and order filters

@@ -3,6 +3,12 @@
 History
 =======
 
+v.....
+------
+* Filters: proper lookup choices for foreign columns
+* search_in_choices(): match substring instead of startswith()
+* Filter tracing: serialize with DjangoJSONEncoder
+
 v4.1.2
 ------
 * pass "extra_data" during table initialization

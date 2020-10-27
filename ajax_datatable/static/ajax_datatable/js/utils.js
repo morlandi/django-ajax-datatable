@@ -339,7 +339,7 @@ window.AjaxDatatableViewUtils = (function() {
             Object.assign(data, extra_data);
         }
         $.ajax({
-            type: 'GET',
+            type: 'POST',
             //url: url + '?action=initialize',
             url: url,
             data: data,
