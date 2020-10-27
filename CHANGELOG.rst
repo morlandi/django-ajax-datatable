@@ -3,7 +3,7 @@
 History
 =======
 
-v.....
+v4.1.3
 ------
 * Filters: proper lookup choices for foreign columns
 * search_in_choices(): match substring instead of startswith()
