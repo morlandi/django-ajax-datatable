@@ -111,7 +111,8 @@ class Column(object):
         #return [matching_value for key, matching_value in six.iteritems(self._search_choices_lookup) if key.startswith(value)]
         pattern = pattern.lower()
         #values = [key for (key, text) in self._choices_lookup.items() if pattern in text.lower()]
-        values = [key for (key, text) in self._choices_lookup.items() if text.lower().startswith(pattern)]
+        #values = [key for (key, text) in self._choices_lookup.items() if text.lower().startswith(pattern)]
+        values = [key for (key, text) in self._choices_lookup.items() if pattern in text.lower()]
         return values
 
 
