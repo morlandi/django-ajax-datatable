@@ -1,5 +1,6 @@
 import datetime
 from django.utils.translation import ugettext_lazy as _
+from django.db import models
 from .exceptions import ColumnOrderError
 from .utils import format_datetime
 
@@ -191,6 +192,11 @@ class ForeignColumn(Column):
 
             if current_value is None:
                 return None
+
+        # use __str__() if no attribute has been specified by 'foreign_field'
+        # TODO: what happens with search and choices/autofilter ?
+        if isinstance(current_value, models.Model):
+            current_value = str(current_value)
 
         return current_value
 

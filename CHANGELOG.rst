@@ -3,6 +3,10 @@
 History
 =======
 
+v.....
+------
+* foreign_fields: render with __str__() if no attribute has been specified by 'foreign_field'
+
 v4.1.3
 ------
 * Filters: proper lookup choices for foreign columns
