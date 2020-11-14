@@ -976,39 +976,14 @@ A real use case
 App settings
 ============
 
-AJAX_DATATABLE_MAX_COLUMNS
+::
 
-    Default: 30
-
-AJAX_DATATABLE_TRACE_COLUMNDEFS
-
-    When True, enables debug tracing of applied column defs
-
-    Default: False
-
-AJAX_DATATABLE_TRACE_QUERYDICT
-
-    When True, enables debug tracing of datatables requests
-
-    Default: False
-
-AJAX_DATATABLE_TRACE_QUERYSET
-
-    When True, enables debug tracing of applied query
-
-    Default: False
-
-AJAX_DATATABLE_TEST_FILTERS
-
-    When True, trace results for each individual filter, for debugging purposes
-
-    Default: False
-
-AJAX_DATATABLE_DISABLE_QUERYSET_OPTIMIZATION
-
-    When True, all queryset optimizations are disabled
-
-    Default: False
+    AJAX_DATATABLE_MAX_COLUMNS = 30
+    AJAX_DATATABLE_TRACE_COLUMNDEFS = False               #  enables debug tracing of applied column defs
+    AJAX_DATATABLE_TRACE_QUERYDICT = False                #  enables debug tracing of datatables requests
+    AJAX_DATATABLE_TRACE_QUERYSET = False                 #  enables debug tracing of applied query
+    AJAX_DATATABLE_TEST_FILTERS = False                   # trace results for each individual filter, for debugging purposes
+    AJAX_DATATABLE_DISABLE_QUERYSET_OPTIMIZATION = False  # all queryset optimizations are disabled
 
 
 More details
