@@ -343,7 +343,8 @@ window.AjaxDatatableViewUtils = (function() {
             //url: url + '?action=initialize',
             url: url,
             data: data,
-            dataType: 'json'
+            dataType: 'json',
+            headers: {'X-CSRFToken': getCookie('csrftoken')}
         }).done(function(data, textStatus, jqXHR) {
 
             // https://datatables.net/manual/api#Accessing-the-API
