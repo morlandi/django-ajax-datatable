@@ -310,6 +310,8 @@ Optional:
 - show_date_filters = None
 - show_column_filters = None
 - disable_queryset_optimization = False
+- disable_queryset_optimization_only = False
+- disable_queryset_optimization_select_related = False
 - table_row_id_prefix = 'row-'
 - table_row_id_fieldname = 'id'
 - render_row_details_template_name = "render_row_details.html"
@@ -848,6 +850,10 @@ Should this cause any problem, you can disable queryset optimization in two ways
 - globally: by activating the `AJAX_DATATABLE_DISABLE_QUERYSET_OPTIMIZATION` setting
 - per table: by setting to True the value of the `disable_queryset_optimization` attribute
 
+Alternatively, you can selectively disable the `only` or `select_related` optimization with the following flags:
+
+- self.disable_queryset_optimization_only
+- self.disable_queryset_optimization_select_related
 
 A real use case
 ---------------

@@ -64,6 +64,8 @@ class AjaxDatatableView(View):
     show_column_filters = None
 
     disable_queryset_optimization = False
+    disable_queryset_optimization_only = False
+    disable_queryset_optimization_select_related = False
 
     _id_column_renamed_as_pk = False
 
@@ -517,7 +519,10 @@ class AjaxDatatableView(View):
         # Prepare the queryset and apply the search and order filters
         qs = self.get_initial_queryset(request)
         if not DISABLE_QUERYSET_OPTIMIZATION and not self.disable_queryset_optimization:
-            qs = self.optimize_queryset(qs)
+            if (self.disable_queryset_optimization_select_related and self.disable_queryset_optimization_only):
+                pass
+            else:
+                qs = self.optimize_queryset(qs)
         qs = self.prepare_queryset(params, qs)
         if TRACE_QUERYSET:
             prettyprint_queryset(qs)
@@ -757,11 +762,11 @@ class AjaxDatatableView(View):
         # apply optimizations:
 
         # (1) use select_related() to reduce the number of queries
-        if select_related:
+        if select_related and not self.disable_queryset_optimization_select_related:
             qs = qs.select_related(*select_related)
 
         # (2) use only() to reduce the number of columns in the resultset
-        if only:
+        if only and not self.disable_queryset_optimization_only:
             qs = qs.only(*only)
 
         return qs

@@ -3,9 +3,11 @@
 History
 =======
 
-v.....
+v4.1.4
 ------
 * foreign_fields: render with __str__() if no attribute has been specified by 'foreign_field'
+* [fix] added missing csrftoken header in first POST call (initialize_table())
+* selectively disable the `only` or `select_related` queryset optimization
 
 v4.1.3
 ------
