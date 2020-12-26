@@ -1494,6 +1494,41 @@ for all subsequent instantiations:
 Application examples
 ====================
 
+Adding a button for editing
+---------------------------
+
+Since the list of table columns is controlled by the library, based on column_defs list
+specified in the AjaxDatatableView class, you can't insert a custom column "javascript-side".
+
+However, you can easily do it "python-side":
+
+.. code:: python
+
+    class ArtistAjaxDatatableView(AjaxDatatableView):
+
+        ...
+
+        column_defs = [
+            ...
+            {'name': 'edit', 'title': 'Edit', 'placeholder': True, 'searchable': False, 'orderable': False, },
+            ...
+        ]
+
+        def customize_row(self, row, obj):
+            row['edit'] = """
+                <a href="#" class="btn btn-info btn-edit"
+                   onclick="var id=this.closest('tr').id.substr(4); alert('Editing Artist: ' + id); return false;">
+                   Edit
+                </a>
+            """
+            ...
+
+.. image:: screenshots/custom-row-button.png
+
+In the snippet above, we added an 'edit' column, customizing it's content via customize_row().
+
+Note how we retrieved the object id from the "row-NNN" table row attribute in the "onclick" handler.
+
 Customize row details by rendering prettified json fields
 ---------------------------------------------------------
 

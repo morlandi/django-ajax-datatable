@@ -146,8 +146,16 @@ class ArtistAjaxDatatableView(AjaxDatatableView):
         AjaxDatatableView.render_row_tools_column_def(),
         {'name': 'pk', 'visible': False, },
         {'name': 'name', 'visible': True, },
+        {'name': 'edit', 'title': 'Edit', 'searchable': False, 'orderable': False, },
     ]
 
+    def customize_row(self, row, obj):
+        row['edit'] = """
+            <a href="#" class="btn btn-info btn-edit"
+               onclick="var id=this.closest('tr').id.substr(4); alert('Editing Artist: ' + id); return false;">
+               Edit
+            </a>
+        """
 
 class CustomPkAjaxDatatableView(AjaxDatatableView):
 
