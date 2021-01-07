@@ -3,6 +3,11 @@
 History
 =======
 
+v4.1.5
+------
+* Edit button example
+* Better row-tools style (fix for Firefox)
+
 v4.1.4
 ------
 * foreign_fields: render with __str__() if no attribute has been specified by 'foreign_field'
