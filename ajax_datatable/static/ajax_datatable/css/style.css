@@ -32,6 +32,9 @@
 .dataTables_wrapper td.dataTables_row-tools {
     /*cursor: pointer;*/
 }
+.dataTables_wrapper td.dataTables_row-tools div {
+    white-space: nowrap;
+}
 .dataTables_wrapper td.dataTables_row-tools .minus { display: none; }
 .dataTables_wrapper td.dataTables_row-tools .plus { display: inline; }
 
