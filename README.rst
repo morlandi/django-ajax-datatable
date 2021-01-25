@@ -181,6 +181,13 @@ file `permissions_list.html`
     <table id="datatable_permissions">
     </table>
 
+    or:
+
+    <div class="table-responsive">
+        <table id="datatable_permissions" width="100%" class="table table-striped table-bordered dt-responsive compact nowrap">
+        </table>
+    </div>
+
     ...
 
     <script language="javascript">
