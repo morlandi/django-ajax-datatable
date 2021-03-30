@@ -45,7 +45,6 @@ class AjaxDatatableView(View):
     column_defs = []
 
     model = None
-    template_name = 'ajax_datatable/datatable.html'
     initial_order = [[1, "asc"]]
     length_menu = [[10, 20, 50, 100], [10, 20, 50, 100]]
     table_row_id_prefix = 'row-'
@@ -282,12 +281,6 @@ class AjaxDatatableView(View):
         Override to customize based of request
         """
         return self.length_menu
-
-    def get_template_name(self, request):
-        """
-        Override to customize based of request
-        """
-        return self.template_name
 
     def get_latest_by(self, request):
         """
