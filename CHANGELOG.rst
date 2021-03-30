@@ -3,6 +3,14 @@
 History
 =======
 
+v4.1.6
+------
+
+* Unused template 'datatable.html' removed.
+* Fix issues #2 and #8
+* Fix issue #9
+* Raise an exception when searching over a ManyToManyField (not supported yet)
+
 v4.1.5
 ------
 * Edit button example
