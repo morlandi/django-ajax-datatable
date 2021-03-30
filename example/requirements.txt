@@ -3,3 +3,7 @@ django-npm==1.0.0
 pylast==3.3.0
 -e ../
 
+# Optional:
+sqlparse
+termcolor
+pygments

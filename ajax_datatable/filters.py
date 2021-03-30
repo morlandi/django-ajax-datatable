@@ -40,6 +40,11 @@ def build_column_filter(column_name, column_obj, column_spec, search_value, glob
                 search_filter = Q(**{query_param_name + '__range': date_range})
         except ValueError:
             pass
+    elif isinstance(column_obj.model_field, models.ManyToManyField):
+        # query_param_name = column_obj.get_field_search_path()
+        # search_filter = Q(**{query_param_name + '__in': [search_value, ]})
+        raise Exception('Searching not supported for ManyToManyFields (yet)')
+        pass
     else:
         query_param_name = column_obj.get_field_search_path()
         # #search_filters |= Q(**{query_param_name + '__istartswith': search_value})

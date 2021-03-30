@@ -834,8 +834,11 @@ class AjaxDatatableView(View):
             if column_filter:
                 search_filters |= column_filter
                 if TEST_FILTERS:
-                    qstest = qs.filter(column_filter)
-                    trace('%8d/%8d records filtered over column "%s"' % (qstest.count(), qs.count(), column_name, ))
+                    try:
+                        qstest = qs.filter(column_filter)
+                        trace('%8d/%8d records filtered over column "%s"' % (qstest.count(), qs.count(), column_name, ))
+                    except Exception as e:
+                        trace('ERROR filtering over column "%s": %s' % (column_name, str(e)))
 
         if TEST_FILTERS:
             trace(search_filters)

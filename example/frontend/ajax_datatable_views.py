@@ -98,7 +98,7 @@ class TrackAjaxDatatableView(AjaxDatatableView):
         {'name': 'name', 'visible': True, },
         {'name': 'album', 'foreign_field': 'album__name', 'visible': True, },
         {'name': 'artist', 'title':'Artist', 'foreign_field': 'album__artist__name', 'visible': True, 'choices': True, 'autofilter': True, },
-        {'name': 'tags', 'visible': True, },
+        {'name': 'tags', 'visible': True, 'searchable': False, },
     ]
 
     @query_debugger
