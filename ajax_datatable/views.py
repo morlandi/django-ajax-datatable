@@ -95,6 +95,7 @@ class AjaxDatatableView(View):
                 'name': '',
                 'data': None,
                 'title': '',
+                'sort_field': None,
                 'searchable': False,
                 'orderable': False,
                 'visible': True,
