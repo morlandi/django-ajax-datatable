@@ -567,8 +567,8 @@ class AjaxDatatableView(View):
                             column_name,
                             #self.model_columns[column_name],
                             self.column_obj(column_name),
-                            query_dict.get(column_base + '[orderable]'),
                             query_dict.get(column_base + '[searchable]'),
+                            query_dict.get(column_base + '[orderable]'),
                             query_dict.get(column_base + '[search][value]'),
                         )
                     )
