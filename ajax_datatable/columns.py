@@ -7,9 +7,10 @@ from .utils import format_datetime
 
 class Column(object):
 
-    def __init__(self, model_field, allow_choices_lookup=True):
+    def __init__(self, model_field, sort_field=None, allow_choices_lookup=True):
         try:
             self.name = model_field.name
+            self.sort_column_name = sort_field or model_field.name
             self.model_field = model_field
             choices = model_field.choices
 
@@ -22,6 +23,7 @@ class Column(object):
                 self._allow_choices_lookup = False
         except:
             self.name = model_field
+            self.sort_column_name = sort_field or model_field
             self.model_field = None
             self._allow_choices_lookup = False
 
@@ -56,14 +58,15 @@ class Column(object):
         """
         fields = {f.name: f for f in model._meta.get_fields()}
         col_name = column_spec['name']
+        sort_field = column_spec['sort_field']
         foreign_field = column_spec.get('foreign_field', None)
 
         if foreign_field:
             new_column = ForeignColumn(col_name, model, foreign_field)
         elif col_name in fields:
-            new_column = Column(fields[col_name])
+            new_column = Column(fields[col_name], sort_field=sort_field)
         else:
-            new_column = Column(col_name)
+            new_column = Column(col_name, sort_field=sort_field)
         return new_column
 
     @property
@@ -71,7 +74,7 @@ class Column(object):
         return self._allow_choices_lookup
 
     def get_field_search_path(self):
-        return self.name
+        return self.sort_column_name
 
     def parse_choices(self, choices):
         choices_dict = {}
