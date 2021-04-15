@@ -3,6 +3,10 @@
 History
 =======
 
+v4.1.7
+------
+* Allow to set order field for column (thanks Petr Dlouhý)
+
 v4.1.6
 ------
 

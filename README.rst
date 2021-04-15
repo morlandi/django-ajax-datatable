@@ -322,6 +322,7 @@ Optional:
 - table_row_id_fieldname = 'id'
 - render_row_details_template_name = "render_row_details.html"
 - search_values_separator = ''
+- sort_field: None
 
 or override the following methods to provide attribute values at run-time,
 based on request:
@@ -498,6 +499,15 @@ This default behaviour can be customized by either:
 
 - replacing the values for `table_row_id_fieldname` and/or `table_row_id_prefix`, or
 - overriding `def get_table_row_id(self, request, obj)`
+
+Sorting columns
+---------------
+
+Sorting is managed the by the overridable method `sort_queryset()`, and fully
+delegated to the database for better performances.
+
+For each `orderable` column, the column `name` will be used, unless a `sort_field`
+has been specified; in which case, the latter will be used instead.
 
 Filtering single columns
 ------------------------
