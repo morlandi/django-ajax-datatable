@@ -109,9 +109,19 @@ window.AjaxDatatableViewUtils = (function() {
     */
 
     function getCookie(name) {
+        var cookieValue = null;
         var value = '; ' + document.cookie,
             parts = value.split('; ' + name + '=');
-        if (parts.length == 2) return parts.pop().split(';').shift();
+        if (parts.length == 2) cookieValue = parts.pop().split(';').shift();
+        return cookieValue;
+    }
+
+    function getCSRFToken() {
+        var csrftoken = getCookie('csrftoken');
+        if (csrftoken == null) {
+            csrftoken = $('input[name=csrfmiddlewaretoken]').val();
+        }
+        return csrftoken;
     }
 
     function _setup_column_filters(table, data) {
@@ -345,7 +355,7 @@ window.AjaxDatatableViewUtils = (function() {
             url: url,
             data: data,
             dataType: 'json',
-            headers: {'X-CSRFToken': getCookie('csrftoken')}
+            headers: {'X-CSRFToken': getCSRFToken()}
         }).done(function(data, textStatus, jqXHR) {
 
             // https://datatables.net/manual/api#Accessing-the-API
@@ -403,7 +413,7 @@ window.AjaxDatatableViewUtils = (function() {
                           dataType: 'json',
                           cache: false,
                           crossDomain: false,
-                          headers: {'X-CSRFToken': getCookie('csrftoken')}
+                          headers: {'X-CSRFToken': getCSRFToken()}
                       }).done(function(data, textStatus, jqXHR) {
                           console.log('data rx: %o', data);
                           callback(data);
