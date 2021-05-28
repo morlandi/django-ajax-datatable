@@ -197,7 +197,7 @@ window.AjaxDatatableViewUtils = (function() {
     };
 
 
-    function _bind_row_tools(table, url, full_row_select)
+    function _bind_row_tools(table, url, full_row_select, detail_callback)
     {
         console.log('*** _bind_row_tools()');
 
@@ -231,9 +231,23 @@ window.AjaxDatatableViewUtils = (function() {
                     }
                 }
             });
-        }
-        else {
+        } else if(detail_callback) {
+            table.api().on('click', 'td.dataTables_row-tools .plus, td.dataTables_row-tools .minus', function(event) {
+                event.preventDefault();
+                var tr = $(this).closest('tr');
+                var row = table.api().row(tr);
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    var data = _load_row_details(row.data(), url);
+                    detail_callback(data, tr);
+                    tr.addClass('shown');
+                }
+            });
 
+        } else {
             // Use "plus" and "minus" links to toggle row details
             table.api().on('click', 'td.dataTables_row-tools .plus, td.dataTables_row-tools .minus', function(event) {
                 event.preventDefault();
@@ -316,9 +330,9 @@ window.AjaxDatatableViewUtils = (function() {
     }
 
 
-    function after_table_initialization(table, data, url, full_row_select) {
+    function after_table_initialization(table, data, url, full_row_select, detail_callback) {
         console.log('*** after_table_initialization()');
-        _bind_row_tools(table, url, full_row_select);
+        _bind_row_tools(table, url, full_row_select, detail_callback);
         _setup_column_filters(table, data);
     }
 
@@ -464,7 +478,7 @@ window.AjaxDatatableViewUtils = (function() {
             var table = element.dataTable(options);
 
             _daterange_widget_initialize(table, data);
-            after_table_initialization(table, data, url, options.full_row_select);
+            after_table_initialization(table, data, url, options.full_row_select, options.detail_callback);
         })
     }
 
