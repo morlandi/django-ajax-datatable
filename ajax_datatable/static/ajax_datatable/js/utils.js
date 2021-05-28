@@ -231,23 +231,9 @@ window.AjaxDatatableViewUtils = (function() {
                     }
                 }
             });
-        } else if(detail_callback) {
-            table.api().on('click', 'td.dataTables_row-tools .plus, td.dataTables_row-tools .minus', function(event) {
-                event.preventDefault();
-                var tr = $(this).closest('tr');
-                var row = table.api().row(tr);
-                if (row.child.isShown()) {
-                    row.child.hide();
-                    tr.removeClass('shown');
-                }
-                else {
-                    var data = _load_row_details(row.data(), url);
-                    detail_callback(data, tr);
-                    tr.addClass('shown');
-                }
-            });
 
         } else {
+
             // Use "plus" and "minus" links to toggle row details
             table.api().on('click', 'td.dataTables_row-tools .plus, td.dataTables_row-tools .minus', function(event) {
                 event.preventDefault();
@@ -258,7 +244,16 @@ window.AjaxDatatableViewUtils = (function() {
                     tr.removeClass('shown');
                 }
                 else {
-                    row.child(_load_row_details(row.data(), url), 'details').show('slow');
+                    //row.child(_load_row_details(row.data(), url), 'details').show('slow');
+                    //tr.addClass('shown');
+
+                    var data = _load_row_details(row.data(), url);
+                    if (detail_callback) {
+                        detail_callback(data, tr);
+                    }
+                    else {
+                        row.child(data, 'details').show('slow');
+                    }
                     tr.addClass('shown');
                 }
             });

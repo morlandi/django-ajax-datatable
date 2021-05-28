@@ -789,6 +789,30 @@ Example:
             ...
         })
 
+OR you can have your own callback called instead (thanks to `PetrDlouhy <https://github.com/PetrDlouhy>`_):
+
+.. code:: html
+
+    AjaxDatatableViewUtils.initialize_table(
+        element,
+        url,
+        {
+            // extra_options
+            ...
+            detail_callback: function(data, tr) {
+                console.log('tr: %o', tr);
+                console.log('data: %o', data);
+
+                // for example: open a Bootstrap3 modal
+                $('.modal-body').html(data, 'details');
+                $('.modal').modal();
+            }
+        }, {
+            // extra_data
+            ...
+        },
+    );
+
 footer_message()
 ................
 

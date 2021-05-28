@@ -3,6 +3,10 @@
 History
 =======
 
+...
+------
+* Allow to set detail callback, i.e. to display it in modal (thanks to `PetrDlouhy <https://github.com/PetrDlouhy>`_)
+
 v4.1.7
 ------
 * Allow to set order field for column (thanks Petr Dlouhý)
