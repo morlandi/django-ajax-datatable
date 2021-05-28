@@ -1107,6 +1107,7 @@ The template receives the following context::
         'model': self.model,
         'model_admin': self.get_model_admin(),
         'object': obj,
+        'extra_data': [extra_data dict retrieved from request]
     }, request)
 
 `model_admin`, when available, can be used to navigate fieldsets (if defined)

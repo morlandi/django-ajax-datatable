@@ -418,6 +418,9 @@ class AjaxDatatableView(View):
 
         obj = self.model.objects.get(pk=pk)
 
+        # Extract "extra_data" from request
+        extra_data = {k:v for k,v in request.GET.items() if k not in ['action', 'pk', ]}
+
         # Search a custom template for rendering, if available
         try:
             template = loader.select_template([
@@ -429,6 +432,7 @@ class AjaxDatatableView(View):
                 'model': self.model,
                 'model_admin': self.get_model_admin(),
                 'object': obj,
+                'extra_data': extra_data,
             }, request)
 
         # Failing that, display a simple table with field values

@@ -3,9 +3,11 @@
 History
 =======
 
-...
+v4.2.0
 ------
+* deliver extra_data to render_row_details()
 * Allow to set detail callback, i.e. to display it in modal (thanks to `PetrDlouhy <https://github.com/PetrDlouhy>`_)
+* Fetch 'csrfmiddlewaretoken' when csrftoken cookie is set to HttpOnly (thanks to `shuki25 <https://github.com/shuki25>`_)
 
 v4.1.7
 ------
