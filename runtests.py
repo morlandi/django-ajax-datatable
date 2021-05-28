@@ -14,7 +14,7 @@ if __name__ == "__main__":
     django.setup()
     TestRunner = get_runner(settings)
     test_runner = TestRunner(verbosity=2)
-    failures = test_runner.run_tests(["tests"])
+    failures = test_runner.run_tests(["ajax_datatable.tests"])
     sys.exit(bool(failures))
 
 
