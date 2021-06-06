@@ -1,6 +1,8 @@
 import pylast
 import requests
 from bs4 import BeautifulSoup
+import datetime
+import calendar
 
 from django.conf import settings
 from django.db import transaction
@@ -13,6 +15,8 @@ from backend.models import Artist
 from backend.models import Album
 from backend.models import Track
 
+MONTH_NAMES = [calendar.month_name[i] for i in range(1, 12+1)]
+
 
 class Command(BaseCommand):
     help = 'Scrape LastFM site to retrieve missing release dates form albums'
@@ -22,6 +26,7 @@ class Command(BaseCommand):
             '--database', action='store', dest='database', default=DEFAULT_DB_ALIAS,
             help='Nominates a specific database to load fixtures into. Defaults to the "default" database.',
         )
+        parser.add_argument('--force', action='store_true', help="Clear and refix all")
 
     def handle(self, *args, **options):
 
@@ -29,6 +34,10 @@ class Command(BaseCommand):
 
         # Be transactional !
         with transaction.atomic(using=self.using):
+
+
+            if options['force']:
+                Album.objects.all().update(year=None, release_date=None)
 
             self.fix_release_dates()
 
@@ -52,14 +61,19 @@ class Command(BaseCommand):
         )
 
         for album in albums:
-            year = scrape_release_date(album.url)
-            print('%s --> %s' % (album, year))
-            album.year = year
-            album.save(update_fields=['year', ])
+            release_date = scrape_release_date(album.url)
+            print('%s --> %s' % (album, str(release_date)))
+            if release_date is None:
+                album.release_date = None
+                album.year = None
+            else:
+                album.release_date = release_date
+                album.year = release_date.year
+            album.save(update_fields=['year', 'release_date', ])
 
 
 def scrape_release_date(url):
-    year = None
+    release_date = None
     try:
         response = requests.get(url)
         assert response.ok
@@ -86,11 +100,18 @@ def scrape_release_date(url):
         # - October 2002
         # - 1970
 
-        #print(dl.text)
+        #print('\n'+dl.text)
         tokens = dl.text.split(' ')
         year = int(tokens[-1])
-        #print(year)
+        month = 1
+        day = 1
+        if len(tokens) >= 2 and tokens[-2] in MONTH_NAMES:
+            month = MONTH_NAMES.index(tokens[-2]) + 1
+            if len(tokens) >= 3:
+                day = int(tokens[-3])
+        release_date = datetime.date(year, month, day)
+        #print(release_date)
     except Exception as e:
-        year = None
+        release_date = None
 
-    return year
+    return release_date

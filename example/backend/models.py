@@ -81,9 +81,11 @@ class Album(BaseModel):
 
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, null=False, blank=False)
     year = models.IntegerField(null=True, blank=True)
+    release_date = models.DateField(null=True, blank=True)
 
     class Meta(BaseModel.Meta):
         abstract = False
+        get_latest_by = "-release_date"
 
 
 class Track(BaseModel):
