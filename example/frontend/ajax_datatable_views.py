@@ -22,6 +22,7 @@ from django.template import loader, Context
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.template.defaultfilters import truncatechars
+from django.contrib.auth.models import Permission
 
 from project.query_debugger import query_debugger
 from backend.models import Track
@@ -32,6 +33,23 @@ from backend.models import CustomPk
 
 User = get_user_model()
 
+
+class PermissionAjaxDatatableView(AjaxDatatableView):
+
+    model = Permission
+    title = 'Permissions'
+    initial_order = [["app_label", "asc"], ]
+    length_menu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, 'all']]
+    search_values_separator = '+'
+
+    column_defs = [
+         AjaxDatatableView.render_row_tools_column_def(),
+        {'name': 'id', 'visible': False, },
+        {'name': 'codename', 'visible': True, },
+        {'name': 'name', 'visible': True, },
+        {'name': 'app_label', 'foreign_field': 'content_type__app_label', 'visible': True, },
+        {'name': 'model', 'foreign_field': 'content_type__model', 'visible': True, },
+    ]
 
 # @login_required
 # def object_list_view(request, model, template_name="frontend/pages/object_list.html"):
