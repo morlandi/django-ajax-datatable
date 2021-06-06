@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block page-title %}{% trans 'Side filters' %}{% endblock page-title %}
+
+{% block extrastyle %}
+    <style>
+        pre { font-size: 11px; font-family: monospace; background-color: #fff; padding: 10px 0 0 10px;}
+        input[type="number"] { width: 100px; }
+        .filters {
+            border: 1px solid #999;
+            padding-top: 10px;
+        }
+    </style>
+{% endblock extrastyle %}
+
+
+{% block content %}
+
+    <p>Example with Side filters</p>
+
+    <p>
+    Sometimes you need to provide to the user more control over the queryset
+    used to populate the table, using interactive and specific filters.
+    </p>
+
+    <p>
+    In those cases, you can easily add a sidebar with the required widgets,
+    then collect and apply user selections at every table refresh.
+    </p>
+
+    <h3>How it works</h3>
+
+    <p>
+        First, add to the template all required input widgets, and schedule a table redraw
+        whenever a filter has been changed (or when you believe is more appropriate)
+    </p>
+
+    <pre>
+&lt;div class="col-sm-2 filters"&gt;
+    &lt;h4&gt;Filters&lt;/h4&gt;
+    &lt;label for="from_year"&gt;From year:&lt;/label&gt;&lt;input type="number" id="from_year"&gt;
+    &lt;label for="to_year"&gt;To year:&lt;/label&gt;&lt;input type="number" id="to_year"&gt;
+    ...
+    </pre>
+
+    <pre>
+$(document).ready(function() {
+
+    $('.filters input').on('change paste keyup', function() {
+        // redraw the table
+        $('#datatable').DataTable().ajax.reload(null, false);
+    });
+
+});
+    </pre>
+
+    <p>
+    At table initialization, register in the "extra data" section the callbacks needed
+    to collect user selections
+    </p>
+
+    <pre>
+$(document).ready(function() {
+
+    AjaxDatatableViewUtils.initialize_table(
+        ...
+        }, {
+            // extra_data
+            from_year: function() { return $('input#from_year').val() },
+            to_year: function() { return $('input#to_year').val() },
+            check_year_null: function() { return $("input[name='check_year_null']:checked").val() }
+        },
+    );
+
+});
+    </pre>
+
+    <p>
+        Those "extra data" values will be sent to the AjaxDatatableView with
+        every request; you can take advantage of those by filtering the queryset
+        in the `get_initial_queryset()` override.
+    </p>
+
+    <pre>
+class AlbumAjaxDatatableView(AjaxDatatableView):
+
+    ...
+
+    def get_initial_queryset(self, request=None):
+
+        def get_numeric_param(key):
+            try:
+                value = int(request.POST.get(key))
+            except:
+                value = None
+            return value
+
+        queryset = super().get_initial_queryset(request=request)
+
+        check_year_null = get_numeric_param('check_year_null')
+        if check_year_null is not None:
+            if check_year_null == 0:
+                queryset = queryset.filter(year=None)
+            elif check_year_null == 1:
+                queryset = queryset.exclude(year=None)
+
+        from_year = get_numeric_param('from_year')
+        if from_year is not None:
+            queryset = queryset.filter(year__gte=from_year)
+
+        to_year = get_numeric_param('to_year')
+        if to_year is not None:
+            queryset = queryset.filter(year__lte=to_year)
+
+        return queryset
+    </pre>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2 filters">
+                <h4>Filters</h4>
+                <label for="from_year">From year:</label><input type="number" id="from_year">
+                <label for="to_year">To year:</label><input type="number" id="to_year">
+                <br />
+                <br />
+                <label>Provided:</label><br />
+                <input type="radio" id="year_null" name="check_year_null" value="0">
+                <label for="year_null">year is NULL</label><br>
+                <input type="radio" id="year_not_null" name="check_year_null" value="1">
+                <label for="year_not_null">year is not NULL</label><br>
+                <input type="radio" id="year_any" name="check_year_null" value="-1">
+                <label for="year_any">any</label>
+            </div>
+            <div class="col-sm-10">
+                <div class="table-responsive">
+                    <table id="datatable" width="100%" class="table table-striped table-bordered dt-responsive compact nowrap">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}
+
+
+{% block extrajs %}
+
+    {{ block.super }}
+    <script language="javascript">
+
+        $(document).ready(function() {
+
+            AjaxDatatableViewUtils.initialize_table(
+                $('#datatable'),
+                "{% url 'frontend:ajax_datatable_album' %}",
+                {
+                    // extra_options (example)
+                    processing: false,
+                    autoWidth: false,
+                    full_row_select: true,
+                    scrollX: false
+                }, {
+                    // extra_data
+                    // ...
+                    from_year: function() { return $('input#from_year').val() },
+                    to_year: function() { return $('input#to_year').val() },
+                    check_year_null: function() { return $("input[name='check_year_null']:checked").val() }
+                },
+            );
+
+            $('.filters input').on('change paste keyup', function() {
+                // redraw the table
+                $('#datatable').DataTable().ajax.reload(null, false);
+            });
+        });
+
+    </script>
+{% endblock %}
+

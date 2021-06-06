@@ -23,6 +23,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.template.defaultfilters import truncatechars
 from django.contrib.auth.models import Permission
+from django.db.models import Q
 
 from project.query_debugger import query_debugger
 from backend.models import Track
@@ -109,6 +110,7 @@ class TrackAjaxDatatableView(AjaxDatatableView):
     initial_order = [["name", "asc"], ]
     length_menu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, 'all']]
     search_values_separator = '+'
+    show_date_filters = False
 
     column_defs = [
         AjaxDatatableView.render_row_tools_column_def(),
@@ -147,9 +149,38 @@ class AlbumAjaxDatatableView(AjaxDatatableView):
         AjaxDatatableView.render_row_tools_column_def(),
         {'name': 'pk', 'visible': False, },
         {'name': 'name', 'visible': True, },
+        {'name': 'release_date', 'visible': True, },
         {'name': 'year', 'visible': True, },
         {'name': 'artist', 'title':'Artist', 'foreign_field': 'artist__name', 'visible': True, 'choices': True, 'autofilter': True, },
     ]
+
+    def get_initial_queryset(self, request=None):
+
+        def get_numeric_param(key):
+            try:
+                value = int(request.POST.get(key))
+            except:
+                value = None
+            return value
+
+        queryset = super().get_initial_queryset(request=request)
+
+        check_year_null = get_numeric_param('check_year_null')
+        if check_year_null is not None:
+            if check_year_null == 0:
+                queryset = queryset.filter(year=None)
+            elif check_year_null == 1:
+                queryset = queryset.exclude(year=None)
+
+        from_year = get_numeric_param('from_year')
+        if from_year is not None:
+            queryset = queryset.filter(year__gte=from_year)
+
+        to_year = get_numeric_param('to_year')
+        if to_year is not None:
+            queryset = queryset.filter(year__lte=to_year)
+
+        return queryset
 
 
 class ArtistAjaxDatatableView(AjaxDatatableView):
@@ -160,6 +191,7 @@ class ArtistAjaxDatatableView(AjaxDatatableView):
     initial_order = [["name", "asc"], ]
     length_menu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, 'all']]
     search_values_separator = '+'
+    show_date_filters = False
 
     column_defs = [
         AjaxDatatableView.render_row_tools_column_def(),

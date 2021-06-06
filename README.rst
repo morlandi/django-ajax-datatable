@@ -480,6 +480,26 @@ then:
             return queryset
 
 
+Add a sidebar with custom filters
+---------------------------------
+
+Sometimes you need to provide complex or very specific filters to let the user control
+the content of the table in an advanced manner.
+
+In those cases, the global or column filters provided by AjaxDatatableView,
+which are based on simple <input> and <select> widgets, may not be enought.
+
+Still, you can easily add a sidebar with custom filters, and apply to them
+the concepts explained in the previous paragraph (`Provide "extra data" to narrow down the initial queryset`_).
+
+An example of this technique has been added to the Example project; the result
+and a detailed explanation is presented here:
+
+http://django-ajax-datatable-demo.brainstorm.it/side_filters/
+
+.. image:: screenshots/side_filters.png
+
+
 Automatic addition of table row ID
 ----------------------------------
 
