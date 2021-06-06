@@ -3,6 +3,12 @@
 History
 =======
 
+v4.2.1
+------
+* Example project cleanup
+* Added "side filters" sample
+* Readme updated
+
 v4.2.0
 ------
 * deliver extra_data to render_row_details()
