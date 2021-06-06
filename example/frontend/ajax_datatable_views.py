@@ -129,6 +129,7 @@ class AlbumAjaxDatatableView(AjaxDatatableView):
         AjaxDatatableView.render_row_tools_column_def(),
         {'name': 'pk', 'visible': False, },
         {'name': 'name', 'visible': True, },
+        {'name': 'year', 'visible': True, },
         {'name': 'artist', 'title':'Artist', 'foreign_field': 'artist__name', 'visible': True, 'choices': True, 'autofilter': True, },
     ]
 

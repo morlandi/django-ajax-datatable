@@ -41,7 +41,6 @@ class Command(BaseCommand):
             '--database', action='store', dest='database', default=DEFAULT_DB_ALIAS,
             help='Nominates a specific database to load fixtures into. Defaults to the "default" database.',
         )
-        parser.add_argument('--max-days', type=int, default=0)
 
     def handle(self, *args, **options):
 
@@ -73,8 +72,8 @@ class Command(BaseCommand):
             if Artist.objects.filter(name=name).exists():
                 print('Skip %s' % name)
             else:
-                artist = Artist.objects.create(name=name)
                 obj_artist = network.get_artist(name)
+                artist = Artist.objects.create(name=name, url=obj_artist.get_url())
                 self.load_artist(artist, obj_artist)
 
     def load_artist(self, artist, obj_artist):
@@ -91,7 +90,8 @@ class Command(BaseCommand):
 
                 album = Album.objects.create(
                     artist=artist,
-                    name=title
+                    name=title,
+                    url=obj_album.item.get_url(),
                 )
 
                 for obj_track in obj_tracks:

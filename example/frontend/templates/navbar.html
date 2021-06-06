@@ -9,11 +9,21 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
 
+            {% comment %}
             <li class="nav-item">
                 <a class="nav-link page-index" href="{% url 'frontend:tracks-list' %}">{% trans 'List tracks' %}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link page-index" href="{% url 'frontend:custompks-list' %}">{% trans 'CustomPK' %}</a>
+            </li>
+            {% endcomment %}
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Examples</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown01">
+                    <a class="dropdown-item" href="{% url 'frontend:index' %}">List tracks</a>
+                    <a class="dropdown-item" href="{% url 'frontend:custompks-list' %}">Custom PK</a>
+                </div>
             </li>
 
             {% comment %}
@@ -24,8 +34,11 @@
 
             {% if request.user.is_authenticated %}
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hello, {{request.user}}</a>
-                <div class="dropdown-menu" aria-labelledby="dropdown01">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hello, {{request.user}}</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown02">
+                    {% if request.user.is_staff %}
+                        <a class="dropdown-item" href="/admin/">admin</a>
+                    {% endif %}
                     <a class="dropdown-item" href="{% url 'frontend:logout' %}">Logout</a>
                 </div>
             </li>

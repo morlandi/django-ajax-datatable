@@ -65,6 +65,7 @@ class AlbumAdmin(BaseModelAdmin):
     def get_list_display(self, request):
         items = self.list_display[:]
         items.insert(1, 'artist')
+        items.insert(2, 'year')
         return items
 
 

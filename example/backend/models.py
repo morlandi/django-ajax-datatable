@@ -33,6 +33,7 @@ class BaseModel(models.Model):
     id = models.UUIDField('id', default=uuid.uuid4, primary_key=True, unique=True,
         null=False, blank=False, editable=False)
     name = models.CharField(null=False, blank=False, max_length=256)
+    url = models.CharField(null=False, blank=True, max_length=256)
 
     # metadata
     created = models.DateTimeField(_('created'), null=True, blank=True, )

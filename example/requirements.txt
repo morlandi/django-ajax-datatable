@@ -1,6 +1,9 @@
 Django==3.0.8
 django-npm==1.0.0
-pylast==3.3.0
+pylast==4.2.1
+requests==2.24.0
+lxml==4.6.3
+beautifulsoup4==4.9.3
 -e ../
 
 # Optional:
