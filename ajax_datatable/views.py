@@ -419,7 +419,16 @@ class AjaxDatatableView(View):
 
     def render_row_details(self, pk, request=None):
 
-        obj = self.model.objects.get(pk=pk)
+        #we do some optimization on the request
+        relateds = []
+        if not self.disable_queryset_optimization_only and not self.disable_queryset_optimization_select_related:
+            relateds = [f.name for f in self.model._meta.get_fields() if f.many_to_one and f.concrete]
+
+        prefetchs = []
+        if not self.disable_queryset_optimization_only and not self.disable_queryset_optimization_prefetch_related:
+            prefetchs = [f.name for f in self.model._meta.get_fields() if f.many_to_many and f.concrete]
+
+        obj = self.model.objects.filter(pk=pk).select_related(*relateds).prefetch_related(*prefetchs).first()
 
         # Extract "extra_data" from request
         extra_data = {k:v for k,v in request.GET.items() if k not in ['action', 'pk', ]}
@@ -443,11 +452,14 @@ class AjaxDatatableView(View):
             fields = [f.name for f in self.model._meta.get_fields() if f.concrete]
             html = '<table class="row-details">'
             for field in fields:
-                try:
-                    value = getattr(obj, field)
-                    html += '<tr><td>%s</td><td>%s</td></tr>' % (field, value)
-                except:
-                    pass
+                if field in prefetchs:
+                    value = ', '.join([str(x) for x in eval(f'obj.{field}').all()])
+                else:
+                    try:
+                        value = getattr(obj, field)
+                    except:
+                        continue
+                html += '<tr><td>%s</td><td>%s</td></tr>' % (field, value)
             html += '</table>'
         return html
 
@@ -758,7 +770,7 @@ class AjaxDatatableView(View):
                 model = fields[m2m_field].related_model
 
                 prefetch_related.add(Prefetch(m2m_field,
-                                              queryset=model.objects.only(m2m_name),
+                                              queryset=model.objects.only(m2m_name).order_by(m2m_name),
                                               to_attr=f'{m2m_field}_list',
                                               ))
             else:
