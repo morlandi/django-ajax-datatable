@@ -541,7 +541,12 @@ class AjaxDatatableView(View):
             prettyprint_queryset(qs)
 
         # Slice result
-        paginator = Paginator(qs, params['length'] if params['length'] != -1 else qs.count())
+        #paginator = Paginator(qs, params['length'] if params['length'] != -1 else qs.count())
+        if params['length'] == -1:
+            # fix: prevent ZeroDivisionError
+            paginator = Paginator(qs, max(1,qs.count()))
+        else:
+            paginator = Paginator(qs, params['length'])
         response_dict = self.get_response_dict(request, paginator, params['draw'], params['start'])
         response_dict['footer_message'] = self.footer_message(qs, params)
 
