@@ -3,6 +3,12 @@
 History
 =======
 
+v4.3.0
+------
+* Add support for ManyToMany field (many thanks to Etienne Pouliot); REQUIRES PYTHON 3.6
+* POSSIBLE INCOMPATIBLE CHANGE: PYTHON >= 3.6 REQUIRED
+* Fix #35: prevent ZeroDivisionError
+
 v4.2.1
 ------
 * Example project cleanup
