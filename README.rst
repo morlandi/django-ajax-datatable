@@ -318,6 +318,7 @@ Optional:
 - disable_queryset_optimization = False
 - disable_queryset_optimization_only = False
 - disable_queryset_optimization_select_related = False
+- disable_queryset_optimization_prefetch_related = False
 - table_row_id_prefix = 'row-'
 - table_row_id_fieldname = 'id'
 - render_row_details_template_name = "render_row_details.html"
@@ -400,6 +401,7 @@ Example::
         'searchable': True,                 # optional: default = True if visible, False otherwise
         'orderable': True,                  # optional: default = True if visible, False otherwise
         'foreign_field': 'manager__name',   # optional: follow relation
+        'm2m_foreign_field': 'manager__name',   # optional: follow m2m relation
         'placeholder': False,               # ???
         'className': 'css-class-currency',  # optional class name for cell
         'defaultContent': '<h1>test</h1>',  # ???

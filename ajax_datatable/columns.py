@@ -60,9 +60,12 @@ class Column(object):
         col_name = column_spec['name']
         sort_field = column_spec['sort_field']
         foreign_field = column_spec.get('foreign_field', None)
+        m2m_foreign_field = column_spec.get('m2m_foreign_field', None)
 
         if foreign_field:
             new_column = ForeignColumn(col_name, model, foreign_field)
+        elif m2m_foreign_field:
+            new_column = ManyToManyColumn(col_name, model, m2m_foreign_field)
         elif col_name in fields:
             new_column = Column(fields[col_name], sort_field=sort_field)
         else:
@@ -206,6 +209,24 @@ class ForeignColumn(Column):
     def render_column(self, obj):
         value = self.get_foreign_value(obj)
         return self.render_column_value(obj, value)
+
+
+class ManyToManyColumn(ForeignColumn):
+
+    def get_foreign_value(self, obj):
+        current_value = obj
+        m2m_name, m2m_field = self._field_path
+
+        to_eval = f'obj.{m2m_name}_list'
+        # _list should be generated in optimize_queryset, if not we use regular .all() to get the m2m
+        if not hasattr(obj, f'{m2m_name}_list'):
+            to_eval = f'obj.{m2m_name}.all()'
+        list_values = [
+            getattr(x, m2m_field)
+            for x in eval(to_eval)]
+        current_value = ', '.join(list_values)
+
+        return current_value
 
 
 class ColumnLink(object):
