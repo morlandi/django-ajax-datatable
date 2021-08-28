@@ -118,22 +118,23 @@ class TrackAjaxDatatableView(AjaxDatatableView):
         {'name': 'name', 'visible': True, },
         {'name': 'album', 'foreign_field': 'album__name', 'visible': True, },
         {'name': 'artist', 'title':'Artist', 'foreign_field': 'album__artist__name', 'visible': True, 'choices': True, 'autofilter': True, },
-        {'name': 'tags', 'visible': True, 'searchable': False, },
+        #{'name': 'tags', 'visible': True, 'searchable': False, },
+        {'name': 'tags', 'm2m_foreign_field': 'tags__name', 'searchable': True, 'choices': True, 'autofilter': True, },
     ]
 
     @query_debugger
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
-    def get_initial_queryset(self, request=None):
-        # Optimization: Reduce the number of queries due to ManyToMany "tags" relation
-        return Track.objects.prefetch_related('tags')
+    # def get_initial_queryset(self, request=None):
+    #     # Optimization: Reduce the number of queries due to ManyToMany "tags" relation
+    #     return Track.objects.prefetch_related('tags')
 
-    def customize_row(self, row, obj):
-        # 'row' is a dictionary representing the current row, and 'obj' is the current object.
-        # Display tags as a list of strings
-        row['tags'] = ','.join( [t.name for t in obj.tags.all()])
-        return
+    # def customize_row(self, row, obj):
+    #     # 'row' is a dictionary representing the current row, and 'obj' is the current object.
+    #     # Display tags as a list of strings
+    #     row['tags'] = ','.join( [t.name for t in obj.tags.all()])
+    #     return
 
 
 class AlbumAjaxDatatableView(AjaxDatatableView):
