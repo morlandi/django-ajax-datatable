@@ -309,7 +309,6 @@ Required:
 
 Optional:
 
-- template_name = 'ajax_datatable/datatable.html'
 - initial_order = [[1, "asc"], [5, "desc"]]   # positions can also be expressed as column names: [['surname', 'asc'], ]
 - length_menu = [[10, 20, 50, 100], [10, 20, 50, 100]]
 - latest_by = None
@@ -338,9 +337,6 @@ based on request:
 
     def get_length_menu(self):
         return self.length_menu
-
-    def get_template_name(self):
-        return self.template_name
 
     def get_latest_by(self, request):
         """
