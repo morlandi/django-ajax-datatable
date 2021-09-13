@@ -47,6 +47,9 @@ def build_column_filter(column_name, column_obj, column_spec, search_value, glob
     #     pass
     else:
         query_param_name = column_obj.get_field_search_path()
+
+        # default lookup_field: __icontains
+        lookup_field = column_spec['lookup_field'] if column_spec['lookup_field'] else '__icontains'
         # #search_filters |= Q(**{query_param_name + '__istartswith': search_value})
         # search_filter = Q(**{query_param_name + '__icontains': search_value})
 
@@ -55,8 +58,8 @@ def build_column_filter(column_name, column_obj, column_spec, search_value, glob
         if type(search_value) == list:
             search_filter = Q()
             for item in search_value:
-                search_filter |= Q(**{query_param_name + '__icontains': item})
+                search_filter |= Q(**{query_param_name + lookup_field: item})
         else:
-            search_filter = Q(**{query_param_name + '__icontains': search_value})
+            search_filter = Q(**{query_param_name + lookup_field: search_value})
 
     return search_filter
