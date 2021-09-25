@@ -149,7 +149,7 @@ class AjaxDatatableView(View):
                     except:
                         # checking title from short_description
                         if name in self.list_display and hasattr(getattr(self, name), 'short_description'):
-                            title = getattr(self, item).short_description
+                            title = getattr(self, name).short_description
                         else:
                             title = name
 
