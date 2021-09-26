@@ -3,6 +3,10 @@
 History
 =======
 
+v4.3.1
+------
+* Add custom lookup field; thanks to Javier Clavero Álvarez <jclaveroalvarez@gmail.com>
+
 v4.3.0
 ------
 * Add support for ManyToMany field (many thanks to Etienne Pouliot); REQUIRES PYTHON 3.6
