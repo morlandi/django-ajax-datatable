@@ -112,6 +112,7 @@ class AjaxDatatableView(View):
                 'autofilter': False,
                 'boolean': False,
                 'max_length': 0,
+                'lookup_field': None,
             }
 
             #valid_keys = [key for key in column.keys()][:]
