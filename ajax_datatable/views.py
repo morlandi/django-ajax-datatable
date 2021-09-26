@@ -148,11 +148,7 @@ class AjaxDatatableView(View):
                     try:
                         title = self.model._meta.get_field(name).verbose_name.title()
                     except:
-                        # checking title from short_description
-                        if name in self.list_display and hasattr(getattr(self, name), 'short_description'):
-                            title = getattr(self, name).short_description
-                        else:
-                            title = name
+                        title = name
 
                 column['name'] = name
                 column['data'] = name
