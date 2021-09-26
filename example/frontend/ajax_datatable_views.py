@@ -116,7 +116,7 @@ class TrackAjaxDatatableView(AjaxDatatableView):
         AjaxDatatableView.render_row_tools_column_def(),
         {'name': 'pk', 'visible': False, },
         {'name': 'name', 'visible': True, },
-        {'name': 'album', 'foreign_field': 'album__name', 'visible': True, },
+        {'name': 'album', 'foreign_field': 'album__name', 'visible': True, 'lookup_field': '__istartswith', },
         {'name': 'artist', 'title':'Artist', 'foreign_field': 'album__artist__name', 'visible': True, 'choices': True, 'autofilter': True, },
         #{'name': 'tags', 'visible': True, 'searchable': False, },
         {'name': 'tags', 'm2m_foreign_field': 'tags__name', 'searchable': True, 'choices': True, 'autofilter': True, },

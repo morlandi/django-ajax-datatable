@@ -407,6 +407,7 @@ Example::
         'autofilter': False,                # see `Filtering single columns` below
         'boolean': False,                   # treat calculated column as BooleanField
         'max_length': 0,                    # if > 0, clip result longer then max_length
+        'lookup_field': '__icontains',      # used for searches; default: '__icontains'
     }, {
         ...
 
