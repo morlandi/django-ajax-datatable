@@ -20,7 +20,10 @@ from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
 from django.template import TemplateDoesNotExist
 from django.template import loader, Context
-from django.utils.translation import ugettext_lazy as _
+try:
+    from django.utils.translation import gettext_lazy as _
+except ImportError:
+    from django.utils.translation import ugettext_lazy as _
 
 from .columns import Column
 from .columns import ForeignColumn
@@ -368,7 +371,7 @@ class AjaxDatatableView(View):
             request.REQUEST = request.GET if request.method=='GET' else request.POST
 
         self.initialize(request)
-        if request.is_ajax():
+        if request.accepts('application/json'):
             action = request.REQUEST.get('action', '')
             if action == 'initialize':
 
@@ -517,7 +520,7 @@ class AjaxDatatableView(View):
 
         t0 = datetime.datetime.now()
 
-        if not request.is_ajax():
+        if not request.accepts('application/json'):
             return HttpResponseBadRequest()
 
         try:

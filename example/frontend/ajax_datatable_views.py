@@ -13,7 +13,10 @@ from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
-from django.utils.translation import ugettext_lazy as _
+try:
+    from django.utils.translation import gettext_lazy as _
+except ImportError:
+    from django.utils.translation import ugettext_lazy as _
 from django.template import TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.db.models import Count, Min, Sum, Avg
