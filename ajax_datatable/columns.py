@@ -1,8 +1,5 @@
 import datetime
-try:
-    from django.utils.translation import gettext_lazy as _
-except ImportError:
-    from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.db import models
 from .exceptions import ColumnOrderError
 from .utils import format_datetime

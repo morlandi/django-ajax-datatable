@@ -4,10 +4,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.conf import settings
-try:
-    from django.utils.translation import gettext_lazy as _
-except ImportError:
-    from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import PermissionDenied
 from ajax_datatable.utils import format_datetime
 

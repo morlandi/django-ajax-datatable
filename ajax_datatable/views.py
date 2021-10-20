@@ -20,10 +20,7 @@ from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
 from django.template import TemplateDoesNotExist
 from django.template import loader, Context
-try:
-    from django.utils.translation import gettext_lazy as _
-except ImportError:
-    from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from .columns import Column
 from .columns import ForeignColumn
