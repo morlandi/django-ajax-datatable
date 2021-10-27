@@ -221,13 +221,15 @@ class ManyToManyColumn(ForeignColumn):
         # _list should be generated in optimize_queryset, if not we use regular .all() to get the m2m
         if not hasattr(obj, f'{m2m_name}_list'):
             to_eval = f'obj.{m2m_name}.all()'
-        list_values = [
+        return [
             getattr(x, m2m_field)
             for x in eval(to_eval)]
-        current_value = ', '.join(list_values)
 
-        return current_value
+    def render_column_value(self, obj, value_list):
+        if self._allow_choices_lookup:
+            return ', '.join([str(self._choices_lookup.get(value, '')) for value in value_list])
 
+        return ', '.join([str(value) for value in value_list])
 
 class ColumnLink(object):
 
