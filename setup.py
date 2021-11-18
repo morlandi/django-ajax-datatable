@@ -14,8 +14,8 @@ def get_version(*file_paths):
 
 
 version = get_version("ajax_datatable", "__init__.py")
-readme = open('README.rst').read()
-history = open('CHANGELOG.rst').read().replace('.. :changelog:', '')
+readme = open('README.rst', encoding="utf8").read()
+history = open('CHANGELOG.rst', encoding="utf8").read().replace('.. :changelog:', '')
 
 
 setup(name='django-ajax-datatable',
