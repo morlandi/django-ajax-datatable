@@ -222,8 +222,9 @@ class ManyToManyColumn(ForeignColumn):
         if not hasattr(obj, f'{m2m_name}_list'):
             to_eval = f'obj.{m2m_name}.all()'
         list_values = [
-            getattr(x, m2m_field)
-            for x in eval(to_eval)]
+            str(getattr(x, m2m_field))
+            for x in eval(to_eval)
+        ]
         current_value = ', '.join(list_values)
 
         return current_value
