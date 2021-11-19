@@ -19,9 +19,11 @@ class TestDatatablesQs(unittest.TestCase):
 
         column_specs = [{
             'name': 'one',
+            'sort_field': 'one',
             'foreign_field': '',
         }, {
             'name': 'two',
+            'sort_field': 'one',
             'foreign_field': '',
         }]
 

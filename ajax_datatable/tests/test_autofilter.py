@@ -60,8 +60,6 @@ class UserDatatablesWithEmptyColumnNameView(AjaxDatatableView):
         }, {
             'name': '',
         }, {
-            'name': '',
-        }, {
             'name': 'first_name',
             'choices': True,
             'autofilter': True,
@@ -122,7 +120,8 @@ class AutoFilterTestCase(TestCase):
         print(str(raise_context.exception))
 
     def test_missing_column_name(self):
-        # TODO: to be investigated
+        """ There already is helper column with name ''. Should raise duplicate exception """
         request = None
         view = UserDatatablesWithEmptyColumnNameView()
-        view.initialize(request)
+        with self.assertRaisesRegexp(Exception, 'Duplicate column name "" detected'):
+            view.initialize(request)

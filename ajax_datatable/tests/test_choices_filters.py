@@ -6,7 +6,7 @@ from ajax_datatable import *
 
 class TestModel(models.Model):
 
-    F5_CHOICES = (('aaa', 'AAA'), ('bbb', 'BBB'),)
+    F5_CHOICES = [['aaa', 'AAA'], ['bbb', 'BBB'],]
 
     f1 = models.CharField(max_length=20)
     f2 = models.CharField(max_length=20)

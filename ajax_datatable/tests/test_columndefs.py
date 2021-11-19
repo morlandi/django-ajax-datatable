@@ -70,7 +70,7 @@ class TestColumnDefs(TestCase):
         self.assertEqual(per_page, len(data))
 
         for row in data:
-            user = User.objects.get(id=row['id'])
+            user = User.objects.get(id=row['pk'])
             self.assertEqual(user.username, row['username'])
             self.assertEqual(user.first_name, row['first_name'])
             self.assertEqual(user.last_name, row['last_name'])
