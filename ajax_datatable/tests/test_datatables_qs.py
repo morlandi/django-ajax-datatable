@@ -12,7 +12,7 @@ class MyTestModel(models.Model):
         app_label = 'myappname'
 
 
-#class TestAuth(TestCase):
+# class TestAuth(TestCase):
 class TestDatatablesQs(unittest.TestCase):
 
     def test_order(self):
@@ -50,4 +50,3 @@ class TestDatatablesQs(unittest.TestCase):
             ColumnOrderError,
             lambda: Order(1, 'asc', column_links)
         )
-

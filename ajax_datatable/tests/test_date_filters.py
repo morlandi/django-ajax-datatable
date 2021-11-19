@@ -40,6 +40,7 @@ class DatatablesWithLatestByView(AjaxDatatableView):
         }
     ]
 
+
 class DatatablesForceFilterView(AjaxDatatableView):
     model = TestModelWithoutLatestBy
 

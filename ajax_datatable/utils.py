@@ -81,7 +81,7 @@ def prettyprint_query(query, colorize=True, prettify=True):
                 sql,
                 SqlLexer(),
                 TerminalTrueColorFormatter(style='monokai')
-                #TerminalTrueColorFormatter()
+                # TerminalTrueColorFormatter()
             )
         return sql
 

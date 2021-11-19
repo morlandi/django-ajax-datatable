@@ -35,7 +35,6 @@ class Command(BaseCommand):
         # Be transactional !
         with transaction.atomic(using=self.using):
 
-
             if options['force']:
                 Album.objects.all().update(year=None, release_date=None)
 
@@ -92,7 +91,7 @@ def scrape_release_date(url):
 
         html = BeautifulSoup(response.content.decode(), features="lxml")
         block = html.find("dl", {"class": "catalogue-metadata"})
-        dt = [e for e in block.find_all('dt') if e.text=='Release Date'][0]
+        dt = [e for e in block.find_all('dt') if e.text == 'Release Date'][0]
         dl = dt.findNextSibling()
 
         # Sample text:
@@ -100,7 +99,7 @@ def scrape_release_date(url):
         # - October 2002
         # - 1970
 
-        #print('\n'+dl.text)
+        # print('\n'+dl.text)
         tokens = dl.text.split(' ')
         year = int(tokens[-1])
         month = 1
@@ -110,7 +109,7 @@ def scrape_release_date(url):
             if len(tokens) >= 3:
                 day = int(tokens[-3])
         release_date = datetime.date(year, month, day)
-        #print(release_date)
+        # print(release_date)
     except Exception as e:
         release_date = None
 

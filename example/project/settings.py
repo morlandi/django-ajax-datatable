@@ -23,7 +23,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # except:
 #     main.__build__ = main.__version__ + " ?"
 try:
-    project.__build__ = subprocess.check_output(["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode('utf-8').strip()
+    project.__build__ = subprocess.check_output(
+        ["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode('utf-8').strip()
 except:
     project.__build__ = ""
 
@@ -157,7 +158,7 @@ STATICFILES_FINDERS = [
 STATICFILES_FINDERS.append('npm.finders.NpmFinder')
 
 
-X_FRAME_OPTIONS='SAMEORIGIN' # only if django version >= 3.0
+X_FRAME_OPTIONS = 'SAMEORIGIN'  # only if django version >= 3.0
 
 LASTFM_API_KEY = ''
 LASTFM_API_SECRET = ''

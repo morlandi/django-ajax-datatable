@@ -16,6 +16,7 @@ class TagAdmin(admin.ModelAdmin):
 ################################################################################
 # BaseModelAdmin
 
+
 class BaseModelAdmin(admin.ModelAdmin):
     """
     Base class for 'shared' model admins;
@@ -82,6 +83,7 @@ class TrackAdmin(BaseModelAdmin):
 
 ################################################################################
 
+
 @admin.register(CustomPk)
 class CustomPkAdmin(admin.ModelAdmin):
-    list_display= ['pk', 'name', ]
+    list_display = ['pk', 'name', ]

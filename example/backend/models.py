@@ -31,22 +31,24 @@ class BaseModel(models.Model):
 
     # Primary key
     id = models.UUIDField('id', default=uuid.uuid4, primary_key=True, unique=True,
-        null=False, blank=False, editable=False)
+                          null=False, blank=False, editable=False)
     name = models.CharField(null=False, blank=False, max_length=256)
     url = models.CharField(null=False, blank=True, max_length=256)
 
     # metadata
     created = models.DateTimeField(_('created'), null=True, blank=True, )
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('created by'), null=True, blank=True, related_name='+', on_delete=models.SET_NULL)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_(
+        'created by'), null=True, blank=True, related_name='+', on_delete=models.SET_NULL)
     updated = models.DateTimeField(_('updated'), null=True, blank=True, )
-    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('updated by'), null=True, blank=True, related_name='+', on_delete=models.SET_NULL)
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_(
+        'updated by'), null=True, blank=True, related_name='+', on_delete=models.SET_NULL)
 
     def __str__(self):
         return str(self.name)
 
     def get_admin_url(self):
         return reverse("admin:%s_%s_change" %
-            (self._meta.app_label, self._meta.model_name), args=(self.id,))
+                       (self._meta.app_label, self._meta.model_name), args=(self.id,))
 
     def get_absolute_url(self):
         return self.get_admin_url()
@@ -117,4 +119,3 @@ class CustomPk(models.Model):
     # Primary key
     auto_increment_id = models.AutoField(primary_key=True)
     name = models.CharField(null=False, blank=False, max_length=256)
-

@@ -432,7 +432,8 @@ class AjaxDatatableView(View):
         # Search a custom template for rendering, if available
         try:
             template = loader.select_template([
-                'ajax_datatable/%s/%s/%s' % (self.model._meta.app_label, self.model._meta.model_name, self.render_row_details_template_name),
+                'ajax_datatable/%s/%s/%s' % (self.model._meta.app_label,
+                                             self.model._meta.model_name, self.render_row_details_template_name),
                 'ajax_datatable/%s/%s' % (self.model._meta.app_label, self.render_row_details_template_name),
                 'ajax_datatable/%s' % (self.render_row_details_template_name, ),
             ])
@@ -950,10 +951,10 @@ class AjaxDatatableView(View):
             else:
                 queryset = self.get_foreign_queryset(request, field)
             values = list(queryset
-                .values_list(field.name, flat=True)
-                .distinct()
-                .order_by(field.name)
-            )
+                          .values_list(field.name, flat=True)
+                          .distinct()
+                          .order_by(field.name)
+                          )
 
             # Make sure initial_search_value is available
             if initial_search_value is not None:

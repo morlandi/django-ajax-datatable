@@ -44,7 +44,7 @@ class PermissionAjaxDatatableView(AjaxDatatableView):
     search_values_separator = '+'
 
     column_defs = [
-         AjaxDatatableView.render_row_tools_column_def(),
+        AjaxDatatableView.render_row_tools_column_def(),
         {'name': 'id', 'visible': False, },
         {'name': 'codename', 'visible': True, },
         {'name': 'name', 'visible': True, },
@@ -117,7 +117,8 @@ class TrackAjaxDatatableView(AjaxDatatableView):
         {'name': 'pk', 'visible': False, },
         {'name': 'name', 'visible': True, },
         {'name': 'album', 'foreign_field': 'album__name', 'visible': True, 'lookup_field': '__istartswith', },
-        {'name': 'artist', 'title':'Artist', 'foreign_field': 'album__artist__name', 'visible': True, 'choices': True, 'autofilter': True, },
+        {'name': 'artist', 'title': 'Artist', 'foreign_field': 'album__artist__name',
+            'visible': True, 'choices': True, 'autofilter': True, },
         #{'name': 'tags', 'visible': True, 'searchable': False, },
         {'name': 'tags', 'm2m_foreign_field': 'tags__name', 'searchable': True, 'choices': True, 'autofilter': True, },
     ]
@@ -152,7 +153,8 @@ class AlbumAjaxDatatableView(AjaxDatatableView):
         {'name': 'name', 'visible': True, },
         {'name': 'release_date', 'visible': True, },
         {'name': 'year', 'visible': True, },
-        {'name': 'artist', 'title':'Artist', 'foreign_field': 'artist__name', 'visible': True, 'choices': True, 'autofilter': True, },
+        {'name': 'artist', 'title': 'Artist', 'foreign_field': 'artist__name',
+            'visible': True, 'choices': True, 'autofilter': True, },
     ]
 
     def get_initial_queryset(self, request=None):
@@ -209,6 +211,7 @@ class ArtistAjaxDatatableView(AjaxDatatableView):
             </a>
         """
 
+
 class CustomPkAjaxDatatableView(AjaxDatatableView):
 
     model = CustomPk
@@ -217,9 +220,7 @@ class CustomPkAjaxDatatableView(AjaxDatatableView):
     length_menu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, 'all']]
 
     column_defs = [
-        #AjaxDatatableView.render_row_tools_column_def(),
+        # AjaxDatatableView.render_row_tools_column_def(),
         {'name': 'pk', 'visible': True, },
         {'name': 'name', 'visible': True, },
     ]
-
-

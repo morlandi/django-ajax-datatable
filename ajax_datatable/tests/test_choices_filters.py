@@ -6,7 +6,7 @@ from ajax_datatable import *
 
 class TestModel(models.Model):
 
-    F5_CHOICES = [['aaa', 'AAA'], ['bbb', 'BBB'],]
+    F5_CHOICES = [['aaa', 'AAA'], ['bbb', 'BBB'], ]
 
     f1 = models.CharField(max_length=20)
     f2 = models.CharField(max_length=20)
@@ -33,7 +33,7 @@ class TestAjaxDatatableView(AjaxDatatableView):
         }, {
             # Don't use choices
             'name': 'f1',
-            #'choices': None
+            # 'choices': None
         }, {
             # Don't use choices
             'name': 'f2',
@@ -56,6 +56,7 @@ class TestAjaxDatatableView(AjaxDatatableView):
             'choices': True,
         }
     ]
+
 
 class ChoicesFiltersTestCase(unittest.TestCase):
 

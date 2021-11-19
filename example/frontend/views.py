@@ -7,6 +7,7 @@ from backend.models import Track
 
 User = get_user_model()
 
+
 @query_debugger
 def tracks_list_view(request):
     """
@@ -17,6 +18,5 @@ def tracks_list_view(request):
     template_name = "frontend/track/list.html"
 
     return render(request, template_name, {
-        #'model': model,
+        # 'model': model,
     })
-
