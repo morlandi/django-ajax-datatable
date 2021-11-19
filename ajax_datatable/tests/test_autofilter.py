@@ -1,11 +1,9 @@
-#from django.test import TestCase
-from django.db import models
+# from django.test import TestCase
 from unittest import TestCase
 import factory
 import factory.random
 from django.contrib.auth import get_user_model
-from django.core.paginator import Paginator
-from ajax_datatable import *
+from ajax_datatable import AjaxDatatableView
 
 
 User = get_user_model()

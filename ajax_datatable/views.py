@@ -135,7 +135,7 @@ class AjaxDatatableView(View):
 
                 # Detect unexpected keys
                 for key in c.keys():
-                    if not key in valid_keys:
+                    if key not in valid_keys:
                         raise Exception('Unexpected key "%s" for column "%s"' % (key, name))
 
                 if 'title' in c:
@@ -143,7 +143,7 @@ class AjaxDatatableView(View):
                 else:
                     try:
                         title = self.model._meta.get_field(name).verbose_name.title()
-                    except:
+                    except AttributeError:
                         title = name
 
                 column['name'] = name
@@ -188,13 +188,13 @@ class AjaxDatatableView(View):
             #
 
             # (1) None (default) or False: no choices (use text input box)
-            if cs['choices'] == False:
+            if cs['choices'] is False:
                 # Do not use choices
                 cs['choices'] = None
             # (2) True: use Model's field choices;
             #     - failing that, we might use "autofilter"; that is: collect the list of distinct values from db table
             #     - BooleanFields deserve a special treatement
-            elif cs['choices'] == True:
+            elif cs['choices'] is True:
 
                 # For boolean fields, provide (None)/Yes/No choice sequence
                 if isinstance(column.model_field, models.BooleanField):
@@ -454,7 +454,7 @@ class AjaxDatatableView(View):
                 else:
                     try:
                         value = getattr(obj, field)
-                    except:
+                    except AttributeError:
                         continue
                 html += '<tr><td>%s</td><td>%s</td></tr>' % (field, value)
             html += '</table>'
@@ -529,7 +529,10 @@ class AjaxDatatableView(View):
         # Prepare the queryset and apply the search and order filters
         qs = self.get_initial_queryset(request)
         if not DISABLE_QUERYSET_OPTIMIZATION and not self.disable_queryset_optimization:
-            if (self.disable_queryset_optimization_select_related and self.disable_queryset_optimization_only and self.disable_queryset_optimization_prefetch_related):
+            if (
+                    self.disable_queryset_optimization_select_related and
+                    self.disable_queryset_optimization_only and self.disable_queryset_optimization_prefetch_related
+            ):
                 pass
             else:
                 qs = self.optimize_queryset(qs)
@@ -729,7 +732,7 @@ class AjaxDatatableView(View):
         if self.table_row_id_fieldname:
             try:
                 result = self.table_row_id_prefix + str(getattr(obj, self.table_row_id_fieldname))
-            except:
+            except AttributeError:
                 result = ''
         return result
 
@@ -898,7 +901,7 @@ class AjaxDatatableView(View):
             try:
                 latest_by_field = self.column_obj(self.latest_by).model_field
                 is_datetime = isinstance(latest_by_field, models.DateTimeField)
-            except:
+            except AttributeError:
                 is_datetime = False
 
             if date_from:

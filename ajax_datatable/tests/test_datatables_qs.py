@@ -1,7 +1,7 @@
-#from django.test import TestCase
+# from django.test import TestCase
 from django.db import models
 import unittest
-from ajax_datatable import *
+from ajax_datatable import Column, ColumnLink, Order, ColumnOrderError
 
 
 class MyTestModel(models.Model):
@@ -27,8 +27,8 @@ class TestDatatablesQs(unittest.TestCase):
             'foreign_field': '',
         }]
 
-        #model_columns = Column.collect_model_columns(MyTestModel, ['one', 'two'])
-        #model_columns = Column.collect_model_columns(MyTestModel, column_specs)
+        # model_columns = Column.collect_model_columns(MyTestModel, ['one', 'two'])
+        # model_columns = Column.collect_model_columns(MyTestModel, column_specs)
         model_columns = {
             'one': Column.column_factory(MyTestModel, column_specs[0]),
             'two': Column.column_factory(MyTestModel, column_specs[1]),

@@ -21,7 +21,7 @@ class Column(object):
                 self._allow_choices_lookup = True
             else:
                 self._allow_choices_lookup = False
-        except:
+        except AttributeError:
             self.name = model_field
             self.sort_column_name = sort_field or model_field
             self.model_field = None
@@ -108,14 +108,15 @@ class Column(object):
     def render_column(self, obj):
         try:
             value = getattr(obj, self.name)
-        except:
+        except AttributeError:
             value = '???'
         return self.render_column_value(obj, value)
 
     def search_in_choices(self, pattern):
         if not self._allow_choices_lookup:
             return []
-        # return [matching_value for key, matching_value in six.iteritems(self._search_choices_lookup) if key.startswith(value)]
+        # return [matching_value for key, matching_value in
+        # six.iteritems(self._search_choices_lookup) if key.startswith(value)]
         pattern = pattern.lower()
         # values = [key for (key, text) in self._choices_lookup.items() if pattern in text.lower()]
         # values = [key for (key, text) in self._choices_lookup.items() if text.lower().startswith(pattern)]
@@ -184,16 +185,16 @@ class ForeignColumn(Column):
         for current_path_item in self._field_path:
             try:
                 current_value = getattr(current_value, current_path_item)
-            except:
+            except AttributeError:
                 try:
                     current_value = [
                         getattr(current_value, current_path_item)
                         for current_value in current_value.get_queryset()
                     ]
-                except:
+                except AttributeError:
                     try:
                         current_value = [getattr(f, current_path_item) for f in current_value]
-                    except:
+                    except AttributeError:
                         current_value = None
 
             if current_value is None:
