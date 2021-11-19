@@ -1,5 +1,4 @@
 import uuid
-import os
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -107,7 +106,9 @@ class Track(BaseModel):
 
         obj = Track.objects.get(id=self.id)
         obj.pk = uuid.uuid4()
-        obj.description = increment_revision(self.description)
+        # TODO: this seems abandoned, Track has no field description and there is
+        # no function increment_revision
+        # obj.description = increment_revision(self.description)
         obj.save()
         return obj
 

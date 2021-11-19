@@ -1,8 +1,6 @@
 # -*- coding: utf-8
 from __future__ import unicode_literals, absolute_import
 
-import django
-
 DEBUG = True
 USE_TZ = True
 
@@ -21,7 +19,7 @@ DATABASES = {
     }
 }
 
-#ROOT_URLCONF = "tests.urls"
+# ROOT_URLCONF = "tests.urls"
 
 INSTALLED_APPS = [
     "user",
@@ -31,7 +29,7 @@ INSTALLED_APPS = [
     "ajax_datatable",
 ]
 
-AUTH_USER_MODEL="user.TestUser"
+AUTH_USER_MODEL = "user.TestUser"
 
 SITE_ID = 1
 

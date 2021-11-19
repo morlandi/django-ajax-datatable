@@ -1,29 +1,7 @@
-import json
-import datetime
-import sys
-import inspect
-#import dateutil.parser
 from django.contrib.auth import get_user_model
-from django.urls import reverse
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 from ajax_datatable.views import AjaxDatatableView
-from ajax_datatable.utils import trace
-from django.utils.decorators import method_decorator
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
-from django.template import TemplateDoesNotExist
-from django.template.loader import render_to_string
-from django.db.models import Count, Min, Sum, Avg
-from django.utils.safestring import mark_safe
-from django.template import loader, Context
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.humanize.templatetags.humanize import intcomma
-from django.template.defaultfilters import truncatechars
 from django.contrib.auth.models import Permission
-from django.db.models import Q
 
 from project.query_debugger import query_debugger
 from backend.models import Track
@@ -119,7 +97,7 @@ class TrackAjaxDatatableView(AjaxDatatableView):
         {'name': 'album', 'foreign_field': 'album__name', 'visible': True, 'lookup_field': '__istartswith', },
         {'name': 'artist', 'title': 'Artist', 'foreign_field': 'album__artist__name',
             'visible': True, 'choices': True, 'autofilter': True, },
-        #{'name': 'tags', 'visible': True, 'searchable': False, },
+        # {'name': 'tags', 'visible': True, 'searchable': False, },
         {'name': 'tags', 'm2m_foreign_field': 'tags__name', 'searchable': True, 'choices': True, 'autofilter': True, },
     ]
 
@@ -162,7 +140,7 @@ class AlbumAjaxDatatableView(AjaxDatatableView):
         def get_numeric_param(key):
             try:
                 value = int(request.POST.get(key))
-            except:
+            except (ValueError, AttributeError):
                 value = None
             return value
 

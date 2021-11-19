@@ -6,6 +6,7 @@ import datetime
 import json
 from django.views.generic import View
 from django.http.response import HttpResponse, HttpResponseBadRequest
+from django.core.exceptions import FieldDoesNotExist
 from django.core.paginator import Paginator
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
@@ -143,7 +144,7 @@ class AjaxDatatableView(View):
                 else:
                     try:
                         title = self.model._meta.get_field(name).verbose_name.title()
-                    except AttributeError:
+                    except (AttributeError, FieldDoesNotExist):
                         title = name
 
                 column['name'] = name

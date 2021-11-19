@@ -8,12 +8,8 @@ from django.conf import settings
 from django.db import transaction
 from django.db import connections
 from django.db import DEFAULT_DB_ALIAS
-from django.contrib import auth
-from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
-from backend.models import Artist
 from backend.models import Album
-from backend.models import Track
 
 MONTH_NAMES = [calendar.month_name[i] for i in range(1, 12+1)]
 
@@ -52,7 +48,7 @@ class Command(BaseCommand):
         albums = Album.objects.filter(year=None).exclude(url='')
         print(albums)
 
-        network = pylast.LastFMNetwork(
+        pylast.LastFMNetwork(
             api_key=settings.LASTFM_API_KEY,
             api_secret=settings.LASTFM_API_SECRET,
             username=settings.LASTFM_USERNAME,
@@ -110,7 +106,7 @@ def scrape_release_date(url):
                 day = int(tokens[-3])
         release_date = datetime.date(year, month, day)
         # print(release_date)
-    except Exception as e:
+    except Exception:
         release_date = None
 
     return release_date

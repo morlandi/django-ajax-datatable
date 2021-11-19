@@ -19,13 +19,14 @@ import project
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # try:
-#     main.__build__ = subprocess.check_output(["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode('utf-8').strip()
+#     main.__build__ = subprocess.check_output(
+#        ["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode('utf-8').strip()
 # except:
 #     main.__build__ = main.__version__ + " ?"
 try:
     project.__build__ = subprocess.check_output(
         ["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode('utf-8').strip()
-except:
+except Exception:
     project.__build__ = ""
 
 print('build: %s' % project.__build__, file=sys.stderr)
@@ -39,7 +40,7 @@ SECRET_KEY = 's917$+d8re=1@0sg39l985abmhlen3mo(o7=xy4v86#ka2pdsa'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-#ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['*', ]
 
 
@@ -176,7 +177,7 @@ AJAX_DATATABLE_DISABLE_QUERYSET_OPTIMIZATION = False
 
 # Load local settings when supplied
 try:
-    from project.local import *
+    from project.local import *  # noqa
     print('Local settings loaded !', file=sys.stderr)
-except ModuleNotFoundError as e:
+except ModuleNotFoundError:
     pass

@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 __version__ = '4.3.1'
 
-from .columns import (
+from .columns import (  # noqa
     Column,
     ForeignColumn,
     ColumnLink,
@@ -9,10 +9,10 @@ from .columns import (
     Order,
 )
 
-from .exceptions import (
+from .exceptions import (  # noqa
     ColumnOrderError,
 )
 
-from .views import (
+from .views import (  # noqa
     AjaxDatatableView
 )
