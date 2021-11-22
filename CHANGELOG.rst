@@ -3,6 +3,9 @@
 History
 =======
 
+...
+* Support choice lookup for m2m_foreign_field (many thanks to Martin Schwier and Etienne Pouliot)
+
 v4.3.1
 ------
 * Add custom lookup field; thanks to Javier Clavero Álvarez <jclaveroalvarez@gmail.com>
