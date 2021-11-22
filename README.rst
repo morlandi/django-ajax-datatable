@@ -793,6 +793,7 @@ render_row_details()
 
 Renders an HTML fragment to show table row content in "detailed view" fashion,
 as previously explained later in the **Add row tools as first column** section.
+Having `"pk"` in your column_defs list is needed to have the script get the object to render.
 
 See also: `row details customization`_
 
