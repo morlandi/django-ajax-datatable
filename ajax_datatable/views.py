@@ -235,6 +235,8 @@ class AjaxDatatableView(View):
                 cs['choices'] = choices if len(choices) > 0 else None
             # (3) Otherwise, just use the sequence of choices that has been supplied.
 
+            if choices and not [ col for col in column_defs_ex if col['name'] == key and 'lookup_field' in col]  :
+                cs['lookup_field'] = '__iexact'
 
             self.column_index[key] = {
                 'spec': cs,
