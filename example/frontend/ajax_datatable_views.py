@@ -141,7 +141,7 @@ class AlbumAjaxDatatableView(AjaxDatatableView):
         def get_numeric_param(key):
             try:
                 value = int(request.POST.get(key))
-            except (ValueError, AttributeError):
+            except (ValueError, AttributeError, TypeError):
                 value = None
             return value
 

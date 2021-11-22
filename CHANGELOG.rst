@@ -5,6 +5,7 @@ History
 
 ...
 * Support choice lookup for m2m_foreign_field (many thanks to Martin Schwier and Etienne Pouliot)
+* Fix Multiple search values when you set search_values_separator = '+' and try to search for term with + in it (many thanks to Petr Dlouhý)
 
 v4.3.1
 ------
