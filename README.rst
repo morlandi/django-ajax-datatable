@@ -1050,7 +1050,7 @@ App settings
     AJAX_DATATABLE_TRACE_QUERYSET = False                 #  enables debug tracing of applied query
     AJAX_DATATABLE_TEST_FILTERS = False                   # trace results for each individual filter, for debugging purposes
     AJAX_DATATABLE_DISABLE_QUERYSET_OPTIMIZATION = False  # all queryset optimizations are disabled
-
+    AJAX_DATATABLE_STRIP_HTML_TAGS = True                 # string HTML tags when rendering the table
 
 More details
 ============

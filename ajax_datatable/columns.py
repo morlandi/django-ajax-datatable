@@ -4,6 +4,8 @@ from django.db import models
 from .exceptions import ColumnOrderError
 from .utils import format_datetime
 from django.utils.html import strip_tags
+from .app_settings import STRIP_HTML_TAGS
+
 
 class Column(object):
 
@@ -92,10 +94,16 @@ class Column(object):
 
         return choices_dict
 
+    def string_tags_in_case(self, value):
+        if STRIP_HTML_TAGS:
+            return strip_tags(value)
+        return value
+
     def render_column_value(self, obj, value):
+
         if self._allow_choices_lookup:
             #return self._choices_lookup[value]
-            return strip_tags(self._choices_lookup.get(value, ''))
+            return self.string_tags_in_case(self._choices_lookup.get(value, ''))
 
         if isinstance(value, datetime.datetime):
             value = format_datetime(value, True)
@@ -103,8 +111,7 @@ class Column(object):
             value = format_datetime(value, False)
         elif isinstance(value, bool):
             value = _('Yes') if value else _('No')
-        return strip_tags(value)
-    # Now it's always stripping HTML by default, for better security, but user should be given the choice to not do so
+        return self.string_tags_in_case(value)
 
     def render_column(self, obj):
         try:
