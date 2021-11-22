@@ -120,6 +120,7 @@ class TrackAjaxDatatableView(AjaxDatatableView):
         {'name': 'artist', 'title':'Artist', 'foreign_field': 'album__artist__name', 'visible': True, 'choices': True, 'autofilter': True, },
         #{'name': 'tags', 'visible': True, 'searchable': False, },
         {'name': 'tags', 'm2m_foreign_field': 'tags__name', 'searchable': True, 'choices': True, 'autofilter': True, },
+        {'name': 'tags2', 'm2m_foreign_field': 'tags2__name', 'searchable': True, 'choices': True, 'autofilter': False, },
     ]
 
     @query_debugger
@@ -221,5 +222,3 @@ class CustomPkAjaxDatatableView(AjaxDatatableView):
         {'name': 'pk', 'visible': True, },
         {'name': 'name', 'visible': True, },
     ]
-
-

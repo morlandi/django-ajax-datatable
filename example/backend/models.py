@@ -16,6 +16,19 @@ class Tag(models.Model):
         return self.name
 
 
+TAG2_CHOICES = (
+    ('rock', 'Rock'),
+    ('pop', 'Pop'),
+    ('new-age', 'New Age'),
+)
+
+class Tag2(models.Model):
+    name = models.CharField(null=False, blank=False, max_length=256, choices=TAG2_CHOICES)
+
+    def __str__(self):
+        return self.name
+
+
 ################################################################################
 # BaseModel
 
@@ -92,7 +105,8 @@ class Track(BaseModel):
 
     album = models.ForeignKey(Album, on_delete=models.CASCADE, null=False, blank=False)
     position = models.IntegerField(default=0, null=False, blank=False)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, blank=True)
+    tags2 = models.ManyToManyField(Tag2, verbose_name="tags w/choices", blank=True)
 
     class Meta(BaseModel.Meta):
         abstract = False
