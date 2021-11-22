@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from .exceptions import ColumnOrderError
 from .utils import format_datetime
-
+from django.utils.html import strip_tags
 
 class Column(object):
 
@@ -94,8 +94,8 @@ class Column(object):
 
     def render_column_value(self, obj, value):
         if self._allow_choices_lookup:
-            # return self._choices_lookup[value]
-            return self._choices_lookup.get(value, '')
+            #return self._choices_lookup[value]
+            return strip_tags(self._choices_lookup.get(value, ''))
 
         if isinstance(value, datetime.datetime):
             value = format_datetime(value, True)
@@ -103,7 +103,8 @@ class Column(object):
             value = format_datetime(value, False)
         elif isinstance(value, bool):
             value = _('Yes') if value else _('No')
-        return value
+        return strip_tags(value)
+    # Now it's always stripping HTML by default, for better security, but user should be given the choice to not do so
 
     def render_column(self, obj):
         try:
