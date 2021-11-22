@@ -1,29 +1,26 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-#from django.utils import six
+# from django.utils import six
 
 import datetime
 import json
 from django.views.generic import View
 from django.http.response import HttpResponse, HttpResponseBadRequest
+from django.core.exceptions import FieldDoesNotExist
 from django.core.paginator import Paginator
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models import Q
 from django.db.models import Prefetch
-from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.template.loader import render_to_string
 from django.http import JsonResponse
-from django.utils.safestring import mark_safe
-from django.template.loader import render_to_string
 from django.template import TemplateDoesNotExist
-from django.template import loader, Context
+from django.template import loader
 from django.utils.translation import ugettext_lazy as _
 
 from .columns import Column
-from .columns import ForeignColumn
 from .columns import ColumnLink
 from .columns import PlaceholderColumnLink
 from .columns import Order
@@ -51,14 +48,14 @@ class AjaxDatatableView(View):
     table_row_id_prefix = 'row-'
     table_row_id_fieldname = 'pk'
     render_row_details_template_name = 'render_row_details.html'
-    search_values_separator = '' # '+'
+    search_values_separator = ''  # '+'
 
     # Set with self.initialize()
     column_specs = []  # used to keep column ording as required
     column_index = {}  # used to speedup lookups
-    #column_objs_lut = {}
+    # column_objs_lut = {}
 
-    #model_columns = {}
+    # model_columns = {}
     latest_by = None
     show_date_filters = None
     show_column_filters = None
@@ -115,8 +112,8 @@ class AjaxDatatableView(View):
                 'lookup_field': '__icontains',
             }
 
-            #valid_keys = [key for key in column.keys()][:]
-            #valid_keys = column.keys().copy()
+            # valid_keys = [key for key in column.keys()][:]
+            # valid_keys = column.keys().copy()
             valid_keys = list(column.keys())
 
             column.update(c)
@@ -139,7 +136,7 @@ class AjaxDatatableView(View):
 
                 # Detect unexpected keys
                 for key in c.keys():
-                    if not key in valid_keys:
+                    if key not in valid_keys:
                         raise Exception('Unexpected key "%s" for column "%s"' % (key, name))
 
                 if 'title' in c:
@@ -147,7 +144,7 @@ class AjaxDatatableView(View):
                 else:
                     try:
                         title = self.model._meta.get_field(name).verbose_name.title()
-                    except:
+                    except (AttributeError, FieldDoesNotExist):
                         title = name
 
                 column['name'] = name
@@ -192,13 +189,13 @@ class AjaxDatatableView(View):
             #
 
             # (1) None (default) or False: no choices (use text input box)
-            if cs['choices'] == False:
+            if cs['choices'] is False:
                 # Do not use choices
                 cs['choices'] = None
             # (2) True: use Model's field choices;
             #     - failing that, we might use "autofilter"; that is: collect the list of distinct values from db table
             #     - BooleanFields deserve a special treatement
-            elif cs['choices'] == True:
+            elif cs['choices'] is True:
 
                 # For boolean fields, provide (None)/Yes/No choice sequence
                 if isinstance(column.model_field, models.BooleanField):
@@ -226,7 +223,7 @@ class AjaxDatatableView(View):
                         # else:
                         #     choices = [(c[0], self.clip_value(c[1], max_length, False)) for c in choices]
                         #
-                        #choices = choices[:]
+                        # choices = choices[:]
                         choices = [[c[0], str(c[1])] for c in choices]
 
                 # ... or collect distict values if 'autofilter' has been enabled
@@ -234,7 +231,6 @@ class AjaxDatatableView(View):
                     choices = self.list_autofilter_choices(request, cs, column.model_field, cs['initialSearchValue'])
                 cs['choices'] = choices if len(choices) > 0 else None
             # (3) Otherwise, just use the sequence of choices that has been supplied.
-
 
             self.column_index[key] = {
                 'spec': cs,
@@ -365,7 +361,7 @@ class AjaxDatatableView(View):
     def dispatch(self, request, *args, **kwargs):
 
         if not getattr(request, 'REQUEST', None):
-            request.REQUEST = request.GET if request.method=='GET' else request.POST
+            request.REQUEST = request.GET if request.method == 'GET' else request.POST
 
         self.initialize(request)
         if request.is_ajax():
@@ -399,7 +395,7 @@ class AjaxDatatableView(View):
                     'show_column_filters': self.show_column_filters,
                 })
             elif action == 'details':
-                #row_id = request.REQUEST.get('id')
+                # row_id = request.REQUEST.get('id')
                 row_id = request.REQUEST.get(self.table_row_id_fieldname)
                 return JsonResponse({
                     'html': self.render_row_details(row_id, request),
@@ -409,7 +405,7 @@ class AjaxDatatableView(View):
             response = super(AjaxDatatableView, self).dispatch(request, *args, **kwargs)
         else:
             assert False
-            #response = HttpResponse(self.render_table(request))
+            # response = HttpResponse(self.render_table(request))
         return response
 
     def get_model_admin(self):
@@ -420,7 +416,7 @@ class AjaxDatatableView(View):
 
     def render_row_details(self, pk, request=None):
 
-        #we do some optimization on the request
+        # we do some optimization on the request
         relateds = []
         if not self.disable_queryset_optimization_only and not self.disable_queryset_optimization_select_related:
             relateds = [f.name for f in self.model._meta.get_fields() if f.many_to_one and f.concrete]
@@ -432,12 +428,13 @@ class AjaxDatatableView(View):
         obj = self.model.objects.filter(pk=pk).select_related(*relateds).prefetch_related(*prefetchs).first()
 
         # Extract "extra_data" from request
-        extra_data = {k:v for k,v in request.GET.items() if k not in ['action', 'pk', ]}
+        extra_data = {k: v for k, v in request.GET.items() if k not in ['action', 'pk', ]}
 
         # Search a custom template for rendering, if available
         try:
             template = loader.select_template([
-                'ajax_datatable/%s/%s/%s' % (self.model._meta.app_label, self.model._meta.model_name, self.render_row_details_template_name),
+                'ajax_datatable/%s/%s/%s' % (self.model._meta.app_label,
+                                             self.model._meta.model_name, self.render_row_details_template_name),
                 'ajax_datatable/%s/%s' % (self.model._meta.app_label, self.render_row_details_template_name),
                 'ajax_datatable/%s' % (self.render_row_details_template_name, ),
             ])
@@ -458,7 +455,7 @@ class AjaxDatatableView(View):
                 else:
                     try:
                         value = getattr(obj, field)
-                    except:
+                    except AttributeError:
                         continue
                 html += '<tr><td>%s</td><td>%s</td></tr>' % (field, value)
             html += '</table>'
@@ -533,7 +530,10 @@ class AjaxDatatableView(View):
         # Prepare the queryset and apply the search and order filters
         qs = self.get_initial_queryset(request)
         if not DISABLE_QUERYSET_OPTIMIZATION and not self.disable_queryset_optimization:
-            if (self.disable_queryset_optimization_select_related and self.disable_queryset_optimization_only and self.disable_queryset_optimization_prefetch_related):
+            if (
+                    self.disable_queryset_optimization_select_related and
+                    self.disable_queryset_optimization_only and self.disable_queryset_optimization_prefetch_related
+            ):
                 pass
             else:
                 qs = self.optimize_queryset(qs)
@@ -542,10 +542,10 @@ class AjaxDatatableView(View):
             prettyprint_queryset(qs)
 
         # Slice result
-        #paginator = Paginator(qs, params['length'] if params['length'] != -1 else qs.count())
+        # paginator = Paginator(qs, params['length'] if params['length'] != -1 else qs.count())
         if params['length'] == -1:
             # fix: prevent ZeroDivisionError
-            paginator = Paginator(qs, max(1,qs.count()))
+            paginator = Paginator(qs, max(1, qs.count()))
         else:
             paginator = Paginator(qs, params['length'])
         response_dict = self.get_response_dict(request, paginator, params['draw'], params['start'])
@@ -590,7 +590,7 @@ class AjaxDatatableView(View):
                     column_links.append(
                         ColumnLink(
                             column_name,
-                            #self.model_columns[column_name],
+                            # self.model_columns[column_name],
                             self.column_obj(column_name),
                             query_dict.get(column_base + '[searchable]'),
                             query_dict.get(column_base + '[orderable]'),
@@ -639,7 +639,7 @@ class AjaxDatatableView(View):
         return queryset
 
     def render_column(self, row, column):
-        #return self.model_columns[column].render_column(row)
+        # return self.model_columns[column].render_column(row)
         value = self.column_obj(column).render_column(row)
         return value
 
@@ -679,7 +679,7 @@ class AjaxDatatableView(View):
         return result
 
     def clip_results(self, retdict):
-        rows = [(cs['name'], cs['max_length']) for cs in  self.column_specs if cs['max_length'] > 0]
+        rows = [(cs['name'], cs['max_length']) for cs in self.column_specs if cs['max_length'] > 0]
         for name, max_length in rows:
             retdict[name] = self.clip_value(str(retdict[name]), max_length, True)
 
@@ -688,7 +688,7 @@ class AjaxDatatableView(View):
         columns = [c['name'] for c in self.column_specs]
         for cur_object in qs:
             retdict = {
-                #fieldname: '<div class="field-%s">%s</div>' % (fieldname, self.render_column(cur_object, fieldname))
+                # fieldname: '<div class="field-%s">%s</div>' % (fieldname, self.render_column(cur_object, fieldname))
                 fieldname: self.render_column(cur_object, fieldname)
                 for fieldname in columns
                 if fieldname
@@ -733,13 +733,13 @@ class AjaxDatatableView(View):
         if self.table_row_id_fieldname:
             try:
                 result = self.table_row_id_prefix + str(getattr(obj, self.table_row_id_fieldname))
-            except:
+            except AttributeError:
                 result = ''
         return result
 
     def customize_row(self, row, obj):
         # 'row' is a dictionnary representing the current row, and 'obj' is the current object.
-        #row['age_is_even'] = obj.age%2==0
+        # row['age_is_even'] = obj.age%2==0
         pass
 
     def optimize_queryset(self, qs):
@@ -896,13 +896,13 @@ class AjaxDatatableView(View):
             # to get rid of time
 
             # BUG: self.latest_by is non a string (the fieldname) ...
-            #is_datetime = isinstance(self.latest_by, models.DateTimeField)
+            # is_datetime = isinstance(self.latest_by, models.DateTimeField)
 
             # ... so lookup the model_field, instead
             try:
                 latest_by_field = self.column_obj(self.latest_by).model_field
                 is_datetime = isinstance(latest_by_field, models.DateTimeField)
-            except:
+            except AttributeError:
                 is_datetime = False
 
             if date_from:
@@ -935,9 +935,8 @@ class AjaxDatatableView(View):
         """
         Overriden to append a message to the bottom of the table
         """
-        #return 'Selected rows: %d' % qs.count()
+        # return 'Selected rows: %d' % qs.count()
         return None
-
 
     def list_autofilter_choices(self, request, column_spec, field, initial_search_value):
         """
@@ -956,10 +955,10 @@ class AjaxDatatableView(View):
             else:
                 queryset = self.get_foreign_queryset(request, field)
             values = list(queryset
-                .values_list(field.name, flat=True)
-                .distinct()
-                .order_by(field.name)
-            )
+                          .values_list(field.name, flat=True)
+                          .distinct()
+                          .order_by(field.name)
+                          )
 
             # Make sure initial_search_value is available
             if initial_search_value is not None:

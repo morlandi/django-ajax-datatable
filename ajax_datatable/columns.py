@@ -21,7 +21,7 @@ class Column(object):
                 self._allow_choices_lookup = True
             else:
                 self._allow_choices_lookup = False
-        except:
+        except AttributeError:
             self.name = model_field
             self.sort_column_name = sort_field or model_field
             self.model_field = None
@@ -109,18 +109,22 @@ class Column(object):
     def render_column(self, obj):
         try:
             value = getattr(obj, self.name)
-        except:
+        except AttributeError:
             value = '???'
         return self.render_column_value(obj, value)
 
-    def search_in_choices(self, pattern):
+    def search_in_choices(self, pattern_list):
         if not self._allow_choices_lookup:
             return []
-        #return [matching_value for key, matching_value in six.iteritems(self._search_choices_lookup) if key.startswith(value)]
-        pattern = pattern.lower()
-        #values = [key for (key, text) in self._choices_lookup.items() if pattern in text.lower()]
-        #values = [key for (key, text) in self._choices_lookup.items() if text.lower().startswith(pattern)]
-        values = [key for (key, text) in self._choices_lookup.items() if pattern in text.lower()]
+        # return [matching_value for key, matching_value in
+        # six.iteritems(self._search_choices_lookup) if key.startswith(value)]
+        values = []
+        if type(pattern_list) != list:
+            pattern_list = [pattern_list]
+        for pattern in pattern_list:
+            pattern = pattern.lower()
+            # values = [key for (key, text) in self._choices_lookup.items() if text.lower().startswith(pattern)]
+            values += [key for (key, text) in self._choices_lookup.items() if pattern in text.lower()]
         return values
 
 
@@ -185,16 +189,16 @@ class ForeignColumn(Column):
         for current_path_item in self._field_path:
             try:
                 current_value = getattr(current_value, current_path_item)
-            except:
+            except AttributeError:
                 try:
                     current_value = [
                         getattr(current_value, current_path_item)
                         for current_value in current_value.get_queryset()
                     ]
-                except:
+                except AttributeError:
                     try:
                         current_value = [getattr(f, current_path_item) for f in current_value]
-                    except:
+                    except AttributeError:
                         current_value = None
 
             if current_value is None:
@@ -222,13 +226,15 @@ class ManyToManyColumn(ForeignColumn):
         # _list should be generated in optimize_queryset, if not we use regular .all() to get the m2m
         if not hasattr(obj, f'{m2m_name}_list'):
             to_eval = f'obj.{m2m_name}.all()'
-        list_values = [
+        return [
             getattr(x, m2m_field)
             for x in eval(to_eval)]
-        current_value = ', '.join(list_values)
 
-        return current_value
+    def render_column_value(self, obj, value_list):
+        if self._allow_choices_lookup:
+            return ', '.join([str(self._choices_lookup.get(value, '')) for value in value_list])
 
+        return ', '.join([str(value) for value in value_list])
 
 class ColumnLink(object):
 
@@ -256,7 +262,7 @@ class ColumnLink(object):
         Get a dictionary representation of :class:`InstanceResource`
         """
         self_dict = {}
-        #for key, value in six.iteritems(self.__dict__):
+        # for key, value in six.iteritems(self.__dict__):
         for key, value in self.__dict__.items():
             if not key.startswith('_'):
                 self_dict[key] = value
@@ -298,5 +304,3 @@ class Order(object):
         return self.column_link.get_field_search_path()
 
 ################################################################################
-
-

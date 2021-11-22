@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from .models import Tag
+from .models import Tag2
 from .models import Artist
 from .models import Album
 from .models import Track
@@ -13,8 +13,13 @@ from .models import CustomPk
 class TagAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(Tag2)
+class Tag2Admin(admin.ModelAdmin):
+    pass
+
 ################################################################################
 # BaseModelAdmin
+
 
 class BaseModelAdmin(admin.ModelAdmin):
     """
@@ -73,7 +78,7 @@ class AlbumAdmin(BaseModelAdmin):
 class TrackAdmin(BaseModelAdmin):
 
     list_filter = BaseModelAdmin.list_filter + ['album__artist', ]
-    filter_horizontal = ['tags', ]
+    filter_horizontal = ['tags', 'tags2', ]
 
     def get_list_display(self, request):
         items = self.list_display[:]
@@ -82,6 +87,7 @@ class TrackAdmin(BaseModelAdmin):
 
 ################################################################################
 
+
 @admin.register(CustomPk)
 class CustomPkAdmin(admin.ModelAdmin):
-    list_display= ['pk', 'name', ]
+    list_display = ['pk', 'name', ]

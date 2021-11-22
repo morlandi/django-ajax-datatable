@@ -1,5 +1,4 @@
 
-from django.db.models import fields
 from django.db.models import Q
 from django.db import models
 from .utils import parse_date
@@ -26,7 +25,7 @@ def build_column_filter(column_name, column_obj, column_spec, search_value, glob
             values = column_obj.search_in_choices(search_value)
 
         # Fixed in v4.1.3; finger crossed ;)
-        #search_filter = Q(**{column_obj.name + '__in': values})
+        # search_filter = Q(**{column_obj.name + '__in': values})
         search_filter = Q(**{column_obj.get_field_search_path() + '__in': values})
 
     elif isinstance(column_obj.model_field, (models.DateTimeField, models.DateField)):

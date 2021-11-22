@@ -1,0 +1,4 @@
+coverage
+django
+factory_boy
+psycopg2==2.8.6
