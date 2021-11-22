@@ -11,7 +11,7 @@ class PermissionAjaxDatatableView(AjaxDatatableView):
     search_values_separator = '+'
 
     column_defs = [
-         AjaxDatatableView.render_row_tools_column_def(),
+        AjaxDatatableView.render_row_tools_column_def(),
         {'name': 'id', 'visible': False, },
         {'name': 'codename', 'visible': True, },
         {'name': 'name', 'visible': True, },

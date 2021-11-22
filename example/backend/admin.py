@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from .models import Tag
 from .models import Tag2
@@ -20,6 +19,7 @@ class Tag2Admin(admin.ModelAdmin):
 
 ################################################################################
 # BaseModelAdmin
+
 
 class BaseModelAdmin(admin.ModelAdmin):
     """
@@ -87,6 +87,7 @@ class TrackAdmin(BaseModelAdmin):
 
 ################################################################################
 
+
 @admin.register(CustomPk)
 class CustomPkAdmin(admin.ModelAdmin):
-    list_display= ['pk', 'name', ]
+    list_display = ['pk', 'name', ]

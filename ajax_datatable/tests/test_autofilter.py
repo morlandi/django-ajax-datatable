@@ -1,11 +1,9 @@
-#from django.test import TestCase
-from django.db import models
+# from django.test import TestCase
 from unittest import TestCase
 import factory
 import factory.random
 from django.contrib.auth import get_user_model
-from django.core.paginator import Paginator
-from ajax_datatable import *
+from ajax_datatable import AjaxDatatableView
 
 
 User = get_user_model()
@@ -57,8 +55,6 @@ class UserDatatablesWithEmptyColumnNameView(AjaxDatatableView):
         {
             'name': 'id',
             'visible': False,
-        }, {
-            'name': '',
         }, {
             'name': '',
         }, {
@@ -122,7 +118,8 @@ class AutoFilterTestCase(TestCase):
         print(str(raise_context.exception))
 
     def test_missing_column_name(self):
-        # TODO: to be investigated
+        """ There already is helper column with name ''. Should raise duplicate exception """
         request = None
         view = UserDatatablesWithEmptyColumnNameView()
-        view.initialize(request)
+        with self.assertRaisesRegexp(Exception, 'Duplicate column name "" detected'):
+            view.initialize(request)

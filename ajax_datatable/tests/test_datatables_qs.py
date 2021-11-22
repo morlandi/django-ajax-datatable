@@ -1,7 +1,7 @@
-#from django.test import TestCase
+# from django.test import TestCase
 from django.db import models
 import unittest
-from ajax_datatable import *
+from ajax_datatable import Column, ColumnLink, Order, ColumnOrderError
 
 
 class MyTestModel(models.Model):
@@ -12,21 +12,23 @@ class MyTestModel(models.Model):
         app_label = 'myappname'
 
 
-#class TestAuth(TestCase):
+# class TestAuth(TestCase):
 class TestDatatablesQs(unittest.TestCase):
 
     def test_order(self):
 
         column_specs = [{
             'name': 'one',
+            'sort_field': 'one',
             'foreign_field': '',
         }, {
             'name': 'two',
+            'sort_field': 'one',
             'foreign_field': '',
         }]
 
-        #model_columns = Column.collect_model_columns(MyTestModel, ['one', 'two'])
-        #model_columns = Column.collect_model_columns(MyTestModel, column_specs)
+        # model_columns = Column.collect_model_columns(MyTestModel, ['one', 'two'])
+        # model_columns = Column.collect_model_columns(MyTestModel, column_specs)
         model_columns = {
             'one': Column.column_factory(MyTestModel, column_specs[0]),
             'two': Column.column_factory(MyTestModel, column_specs[1]),
@@ -48,4 +50,3 @@ class TestDatatablesQs(unittest.TestCase):
             ColumnOrderError,
             lambda: Order(1, 'asc', column_links)
         )
-

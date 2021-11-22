@@ -8,6 +8,7 @@ import time
 import functools
 from ajax_datatable.utils import trace
 
+
 def query_debugger(func):
 
     @functools.wraps(func)

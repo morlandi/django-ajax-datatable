@@ -81,7 +81,7 @@ def prettyprint_query(query, colorize=True, prettify=True):
                 sql,
                 SqlLexer(),
                 TerminalTrueColorFormatter(style='monokai')
-                #TerminalTrueColorFormatter()
+                # TerminalTrueColorFormatter()
             )
         return sql
 
@@ -105,7 +105,7 @@ def format_datetime(dt, include_time=True):
     if isinstance(dt, datetime.datetime):
         try:
             dt = timezone.localtime(dt)
-        except:
+        except Exception:
             local_tz = pytz.timezone(getattr(settings, 'TIME_ZONE', 'UTC'))
             dt = local_tz.localize(dt)
     else:

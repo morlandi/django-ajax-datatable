@@ -20,6 +20,7 @@ from . import ajax_datatable_views
 
 urlpatterns = [
     path('', views.index),
-    path('ajax_datatable/permissions/', ajax_datatable_views.PermissionAjaxDatatableView.as_view(), name="ajax_datatable_permissions"),
+    path('ajax_datatable/permissions/', ajax_datatable_views.PermissionAjaxDatatableView.as_view(),
+         name="ajax_datatable_permissions"),
     path('admin/', admin.site.urls),
 ]
