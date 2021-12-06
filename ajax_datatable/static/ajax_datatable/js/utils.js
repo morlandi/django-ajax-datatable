@@ -183,7 +183,7 @@ window.AjaxDatatableViewUtils = (function() {
             );
 
             var column_filter_row = wrapper.find('.datatable-column-filter-row')
-            column_filter_row.find('input,select').off().on('keyup change', function(event) {
+            column_filter_row.off().on('keyup change', 'input,select', function(event) {
                 var target = $(event.target);
                 _handle_column_filter(table, data, target);
             });
