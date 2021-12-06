@@ -155,10 +155,10 @@ window.AjaxDatatableViewUtils = (function() {
                             html = $('<div>').append(input).html();
                         }
                         if (item.className) {
-                            filter_row += '<th class="' + item.className + '">' + html + '</th>';
+                            filter_row += '<th data-index="' + index + '" class="' + item.className + '">' + html + '</th>';
                         }
                         else {
-                            filter_row += '<th>' + html + '</th>';
+                            filter_row += '<th data-index="' + index + '">' + html + '</th>';
                         }
                     }
                     else {
@@ -167,10 +167,10 @@ window.AjaxDatatableViewUtils = (function() {
                             //     '<div style="border: 1px solid #ccc; text-align: center;">&nbsp;</div>' : _options.search_icon_html;
                             var search_icon_html = _options.search_icon_html === undefined ? '' : _options.search_icon_html;
                             //filter_row += '<th><i class="fa fa-search"></i>&nbsp;</th>';
-                            filter_row += '<th>' + search_icon_html + '</th>';
+                            filter_row += '<th data-index="' + index + '">' + search_icon_html + '</th>';
                         }
                         else {
-                            filter_row += '<th></i>&nbsp;</th>';
+                            filter_row += '<th data-index="' + index + '"></i>&nbsp;</th>';
                         }
                     }
                 }
