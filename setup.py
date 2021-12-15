@@ -14,8 +14,8 @@ def get_version(*file_paths):
 
 
 version = get_version("ajax_datatable", "__init__.py")
-readme = open('README.rst').read()
-history = open('CHANGELOG.rst').read().replace('.. :changelog:', '')
+readme = open('README.rst', encoding="utf8").read()
+history = open('CHANGELOG.rst', encoding="utf8").read().replace('.. :changelog:', '')
 
 
 setup(name='django-ajax-datatable',
@@ -31,16 +31,15 @@ setup(name='django-ajax-datatable',
       packages=find_packages(),
       zip_safe=False,
       classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Framework :: Django',
-        'Framework :: Django :: 2.2',
-        'Framework :: Django :: 3.0',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
-        'Natural Language :: English',
-        'Programming Language :: Python :: 3.7',
-    ],
-)
-
+          'Development Status :: 5 - Production/Stable',
+          'Operating System :: OS Independent',
+          'Programming Language :: Python',
+          'Framework :: Django',
+          'Framework :: Django :: 2.2',
+          'Framework :: Django :: 3.0',
+          'Intended Audience :: Developers',
+          'License :: OSI Approved :: BSD License',
+          'Natural Language :: English',
+          'Programming Language :: Python :: 3.7',
+      ],
+      )

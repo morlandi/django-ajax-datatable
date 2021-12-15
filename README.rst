@@ -793,6 +793,7 @@ render_row_details()
 
 Renders an HTML fragment to show table row content in "detailed view" fashion,
 as previously explained later in the **Add row tools as first column** section.
+Having `"pk"` in your column_defs list is needed to have the script get the object to render.
 
 See also: `row details customization`_
 
@@ -1049,7 +1050,7 @@ App settings
     AJAX_DATATABLE_TRACE_QUERYSET = False                 #  enables debug tracing of applied query
     AJAX_DATATABLE_TEST_FILTERS = False                   # trace results for each individual filter, for debugging purposes
     AJAX_DATATABLE_DISABLE_QUERYSET_OPTIMIZATION = False  # all queryset optimizations are disabled
-
+    AJAX_DATATABLE_STRIP_HTML_TAGS = True                 # string HTML tags when rendering the table
 
 More details
 ============

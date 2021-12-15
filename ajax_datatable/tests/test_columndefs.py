@@ -1,11 +1,10 @@
-#from django.test import TestCase
-from django.db import models
+# from django.test import TestCase
 from unittest import TestCase
 import factory
 import factory.random
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
-from ajax_datatable import *
+from ajax_datatable import AjaxDatatableView
 
 
 User = get_user_model()
@@ -70,7 +69,7 @@ class TestColumnDefs(TestCase):
         self.assertEqual(per_page, len(data))
 
         for row in data:
-            user = User.objects.get(id=row['id'])
+            user = User.objects.get(id=row['pk'])
             self.assertEqual(user.username, row['username'])
             self.assertEqual(user.first_name, row['first_name'])
             self.assertEqual(user.last_name, row['last_name'])

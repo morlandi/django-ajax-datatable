@@ -3,8 +3,6 @@ from django.conf import settings
 from django.db import transaction
 from django.db import connections
 from django.db import DEFAULT_DB_ALIAS
-from django.contrib import auth
-from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from backend.models import Artist
 from backend.models import Album
@@ -98,7 +96,7 @@ class Command(BaseCommand):
                     try:
                         title = obj_track.get_title()
                         print('    %s' % title)
-                        track = Track.objects.create(
+                        Track.objects.create(
                             album=album,
                             name=title,
                         )
