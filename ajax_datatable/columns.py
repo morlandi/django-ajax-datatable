@@ -3,6 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from .exceptions import ColumnOrderError
 from .utils import format_datetime
+from django.utils.html import strip_tags
+from .app_settings import STRIP_HTML_TAGS
 
 
 class Column(object):
@@ -21,7 +23,7 @@ class Column(object):
                 self._allow_choices_lookup = True
             else:
                 self._allow_choices_lookup = False
-        except:
+        except AttributeError:
             self.name = model_field
             self.sort_column_name = sort_field or model_field
             self.model_field = None
@@ -92,10 +94,16 @@ class Column(object):
 
         return choices_dict
 
+    def string_tags_in_case(self, value):
+        if STRIP_HTML_TAGS:
+            return strip_tags(value)
+        return value
+
     def render_column_value(self, obj, value):
+
         if self._allow_choices_lookup:
             #return self._choices_lookup[value]
-            return self._choices_lookup.get(value, '')
+            return self.string_tags_in_case(self._choices_lookup.get(value, ''))
 
         if isinstance(value, datetime.datetime):
             value = format_datetime(value, True)
@@ -103,23 +111,27 @@ class Column(object):
             value = format_datetime(value, False)
         elif isinstance(value, bool):
             value = _('Yes') if value else _('No')
-        return value
+        return self.string_tags_in_case(value)
 
     def render_column(self, obj):
         try:
             value = getattr(obj, self.name)
-        except:
+        except AttributeError:
             value = '???'
         return self.render_column_value(obj, value)
 
-    def search_in_choices(self, pattern):
+    def search_in_choices(self, pattern_list):
         if not self._allow_choices_lookup:
             return []
-        #return [matching_value for key, matching_value in six.iteritems(self._search_choices_lookup) if key.startswith(value)]
-        pattern = pattern.lower()
-        #values = [key for (key, text) in self._choices_lookup.items() if pattern in text.lower()]
-        #values = [key for (key, text) in self._choices_lookup.items() if text.lower().startswith(pattern)]
-        values = [key for (key, text) in self._choices_lookup.items() if pattern in text.lower()]
+        # return [matching_value for key, matching_value in
+        # six.iteritems(self._search_choices_lookup) if key.startswith(value)]
+        values = []
+        if type(pattern_list) != list:
+            pattern_list = [pattern_list]
+        for pattern in pattern_list:
+            pattern = pattern.lower()
+            # values = [key for (key, text) in self._choices_lookup.items() if text.lower().startswith(pattern)]
+            values += [key for (key, text) in self._choices_lookup.items() if pattern in text.lower()]
         return values
 
 
@@ -184,16 +196,16 @@ class ForeignColumn(Column):
         for current_path_item in self._field_path:
             try:
                 current_value = getattr(current_value, current_path_item)
-            except:
+            except AttributeError:
                 try:
                     current_value = [
                         getattr(current_value, current_path_item)
                         for current_value in current_value.get_queryset()
                     ]
-                except:
+                except AttributeError:
                     try:
                         current_value = [getattr(f, current_path_item) for f in current_value]
-                    except:
+                    except AttributeError:
                         current_value = None
 
             if current_value is None:
@@ -257,7 +269,7 @@ class ColumnLink(object):
         Get a dictionary representation of :class:`InstanceResource`
         """
         self_dict = {}
-        #for key, value in six.iteritems(self.__dict__):
+        # for key, value in six.iteritems(self.__dict__):
         for key, value in self.__dict__.items():
             if not key.startswith('_'):
                 self_dict[key] = value
@@ -299,5 +311,3 @@ class Order(object):
         return self.column_link.get_field_search_path()
 
 ################################################################################
-
-

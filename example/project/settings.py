@@ -19,12 +19,14 @@ import project
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # try:
-#     main.__build__ = subprocess.check_output(["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode('utf-8').strip()
+#     main.__build__ = subprocess.check_output(
+#        ["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode('utf-8').strip()
 # except:
 #     main.__build__ = main.__version__ + " ?"
 try:
-    project.__build__ = subprocess.check_output(["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode('utf-8').strip()
-except:
+    project.__build__ = subprocess.check_output(
+        ["git", "describe", "--tags", "--always"], cwd=BASE_DIR).decode('utf-8').strip()
+except Exception:
     project.__build__ = ""
 
 print('build: %s' % project.__build__, file=sys.stderr)
@@ -38,7 +40,7 @@ SECRET_KEY = 's917$+d8re=1@0sg39l985abmhlen3mo(o7=xy4v86#ka2pdsa'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-#ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['*', ]
 
 
@@ -157,7 +159,7 @@ STATICFILES_FINDERS = [
 STATICFILES_FINDERS.append('npm.finders.NpmFinder')
 
 
-X_FRAME_OPTIONS='SAMEORIGIN' # only if django version >= 3.0
+X_FRAME_OPTIONS = 'SAMEORIGIN'  # only if django version >= 3.0
 
 LASTFM_API_KEY = ''
 LASTFM_API_SECRET = ''
@@ -171,11 +173,11 @@ AJAX_DATATABLE_TRACE_QUERYDICT = False
 AJAX_DATATABLE_TRACE_QUERYSET = False
 AJAX_DATATABLE_TEST_FILTERS = False
 AJAX_DATATABLE_DISABLE_QUERYSET_OPTIMIZATION = False
-
+AJAX_DATATABLE_STRIP_HTML_TAGS = True
 
 # Load local settings when supplied
 try:
-    from project.local import *
+    from project.local import *  # noqa
     print('Local settings loaded !', file=sys.stderr)
-except ModuleNotFoundError as e:
+except ModuleNotFoundError:
     pass

@@ -1,7 +1,7 @@
-#from django.test import TestCase
+# from django.test import TestCase
 from django.db import models
 import unittest
-from ajax_datatable import *
+from ajax_datatable import AjaxDatatableView
 
 
 class TestModelWithoutLatestBy(models.Model):
@@ -39,6 +39,7 @@ class DatatablesWithLatestByView(AjaxDatatableView):
             'name': 'two',
         }
     ]
+
 
 class DatatablesForceFilterView(AjaxDatatableView):
     model = TestModelWithoutLatestBy

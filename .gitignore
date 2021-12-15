@@ -54,3 +54,5 @@ db.sqlite3
 .ipynb*
 .cache
 
+# Vim
+*.swp

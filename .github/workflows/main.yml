@@ -1,0 +1,72 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ '**' ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+        
+    strategy:
+      matrix:
+        DJANGO_VERSION: [ '2.2.*', '3.0.*', '3.1.*', '3.2.*' ]
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ hashFiles('setup.py') }}-${{ hashFiles('tests/requirements.txt') }}-${{ matrix.DJANGO_VERSION }}
+
+      - name: Install
+        run: |
+           pip install -q -e .
+           pip install -q --upgrade --upgrade-strategy eager -r tests/requirements.txt
+           pip install -q Django==${{ matrix.DJANGO_VERSION }} 
+           pip install codecov
+
+      - name: Testing
+        run: |
+          cd tests
+          python manage.py makemigrations
+          python manage.py migrate
+          coverage run manage.py test ajax_datatable
+          coverage xml && codecov
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: pip install flake8
+      - name: Running Flake8
+        run: flake8
