@@ -21,6 +21,7 @@ TAG2_CHOICES = (
     ('new-age', 'New Age'),
 )
 
+
 class Tag2(models.Model):
     name = models.CharField(null=False, blank=False, max_length=256, choices=TAG2_CHOICES)
 
