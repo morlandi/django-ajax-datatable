@@ -56,6 +56,9 @@ def build_column_filter(column_name, column_obj, column_spec, search_value, glob
             # same but with 'n', 'o'
             elif search_value in 'no':
                 search_filter = Q(**{query_param_name: False})
+            # if we have any other search value, we exclude both True and False, should return empty
+            elif search_value:
+                search_filter = ~Q(**{f'{query_param_name}__in': [True, False]})
     else:
         query_param_name = column_obj.get_field_search_path()
 
