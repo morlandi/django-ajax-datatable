@@ -50,8 +50,10 @@ def build_column_filter(column_name, column_obj, column_spec, search_value, glob
             search_value = eval(search_value.capitalize())
             search_filter = Q(**{query_param_name: search_value})
         else:
+            # If the filter contains 'y', 'e', 's' or a combination we filter for True
             if search_value in 'yes':
                 search_filter = Q(**{query_param_name: True})
+            # same but with 'n', 'o'
             elif search_value in 'no':
                 search_filter = Q(**{query_param_name: False})
     else:
