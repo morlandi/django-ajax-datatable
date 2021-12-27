@@ -3,7 +3,9 @@
 History
 =======
 
-...
+v4.4.0
+------
+* Prepare for Django 4.0
 * Support choice lookup for m2m_foreign_field (many thanks to Martin Schwier and Etienne Pouliot)
 * Fix Multiple search values when you set search_values_separator = '+' and try to search for term with + in it (many thanks to Petr Dlouhý)
 * POSSIBLE INCOMPATIBLE CHANGE: for security reason, HTML tags are now stripped by default in the rendered table; you can disable this setting AJAX_DATATABLE_STRIP_HTML_TAGS = False (thus restoring the previous behaviour); many thanks to Mich "Mike3285"

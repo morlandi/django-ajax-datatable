@@ -18,7 +18,7 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.template import TemplateDoesNotExist
 from django.template import loader
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from .columns import Column
 from .columns import ColumnLink
@@ -364,7 +364,14 @@ class AjaxDatatableView(View):
             request.REQUEST = request.GET if request.method == 'GET' else request.POST
 
         self.initialize(request)
-        if request.is_ajax():
+
+        try:
+            is_ajax_request = request.accepts("application/json")
+        except AttributeError as e:
+            # Django < 4.0
+            is_ajax_request = request.is_ajax()
+
+        if is_ajax_request:
             action = request.REQUEST.get('action', '')
             if action == 'initialize':
 
@@ -514,7 +521,13 @@ class AjaxDatatableView(View):
 
         t0 = datetime.datetime.now()
 
-        if not request.is_ajax():
+        try:
+            is_ajax_request = request.accepts("application/json")
+        except AttributeError as e:
+            # Django < 4.0
+            is_ajax_request = request.is_ajax()
+
+        if not is_ajax_request:
             return HttpResponseBadRequest()
 
         try:
