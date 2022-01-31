@@ -3,6 +3,10 @@
 History
 =======
 
+v4.4.2
+------
+* fix: searching on a date/datetime field: when the value entered is not a valid date, we clear the table content to give a feedback to the user
+
 v4.4.1
 ------
 * fix: when STRIP_HTML_TAGS is active, None was rendered as 'None' instead of ''

@@ -1,4 +1,4 @@
-
+import datetime
 from django.db.models import Q
 from django.db import models
 from .utils import parse_date
@@ -29,16 +29,33 @@ def build_column_filter(column_name, column_obj, column_spec, search_value, glob
         search_filter = Q(**{column_obj.get_field_search_path() + '__in': values})
 
     elif isinstance(column_obj.model_field, (models.DateTimeField, models.DateField)):
+
+        # try:
+        #     import ipdb; ipdb.set_trace()
+        #     parsed_date = parse_date(search_value)
+        #     date_range = [parsed_date.isoformat(), parsed_date.isoformat()]
+        #     query_param_name = column_obj.get_field_search_path()
+        #     if isinstance(column_obj.model_field, models.DateTimeField):
+        #         search_filter = Q(**{query_param_name + '__date__range': date_range})
+        #     else:
+        #         search_filter = Q(**{query_param_name + '__range': date_range})
+        # except ValueError:
+        #     pass
+
         try:
             parsed_date = parse_date(search_value)
-            date_range = [parsed_date.isoformat(), parsed_date.isoformat()]
-            query_param_name = column_obj.get_field_search_path()
-            if isinstance(column_obj.model_field, models.DateTimeField):
-                search_filter = Q(**{query_param_name + '__date__range': date_range})
-            else:
-                search_filter = Q(**{query_param_name + '__range': date_range})
         except ValueError:
-            pass
+            # when the value entered so far is not a valid date,
+            # let's clear the table content to give a feedback to the user
+            parsed_date = datetime.date(1,1,1)
+        date_range = [parsed_date.isoformat(), parsed_date.isoformat()]
+        query_param_name = column_obj.get_field_search_path()
+        if isinstance(column_obj.model_field, models.DateTimeField):
+            search_filter = Q(**{query_param_name + '__date__range': date_range})
+        else:
+            search_filter = Q(**{query_param_name + '__range': date_range})
+
+
     # elif isinstance(column_obj.model_field, models.ManyToManyField):
     #     # query_param_name = column_obj.get_field_search_path()
     #     # search_filter = Q(**{query_param_name + '__in': [search_value, ]})
