@@ -95,7 +95,7 @@ class Column(object):
         return choices_dict
 
     def string_tags_in_case(self, value):
-        if STRIP_HTML_TAGS:
+        if STRIP_HTML_TAGS and value is not None:
             return strip_tags(value)
         return value
 

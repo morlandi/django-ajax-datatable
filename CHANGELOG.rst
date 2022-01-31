@@ -3,6 +3,10 @@
 History
 =======
 
+v4.4.1
+------
+* fix: when STRIP_HTML_TAGS is active, None was rendered as 'None' instead of ''
+
 v4.4.0
 ------
 * Prepare for Django 4.0
