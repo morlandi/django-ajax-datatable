@@ -102,7 +102,7 @@ class Column(object):
     def render_column_value(self, obj, value):
 
         if self._allow_choices_lookup:
-            #return self._choices_lookup[value]
+            # return self._choices_lookup[value]
             return self.string_tags_in_case(self._choices_lookup.get(value, ''))
 
         if isinstance(value, datetime.datetime):
@@ -226,7 +226,7 @@ class ForeignColumn(Column):
 class ManyToManyColumn(ForeignColumn):
 
     def get_foreign_value(self, obj):
-        current_value = obj
+        current_value = obj # noqa
         m2m_name, m2m_field = self._field_path
 
         to_eval = f'obj.{m2m_name}_list'
@@ -242,6 +242,7 @@ class ManyToManyColumn(ForeignColumn):
             return ', '.join([str(self._choices_lookup.get(value, '')) for value in value_list])
 
         return ', '.join([str(value) for value in value_list])
+
 
 class ColumnLink(object):
 

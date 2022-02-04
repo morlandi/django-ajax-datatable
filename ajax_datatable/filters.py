@@ -61,6 +61,21 @@ def build_column_filter(column_name, column_obj, column_spec, search_value, glob
     #     # search_filter = Q(**{query_param_name + '__in': [search_value, ]})
     #     raise Exception('Searching not supported for ManyToManyFields (yet)')
     #     pass
+    elif isinstance(column_obj.model_field, models.BooleanField):
+        query_param_name = column_obj.get_field_search_path()
+        if search_value in ['true', 'false']:
+            search_value = eval(search_value.capitalize())
+            search_filter = Q(**{query_param_name: search_value})
+        else:
+            # If the filter contains 'y', 'e', 's' or a combination we filter for True
+            if search_value in 'yes':
+                search_filter = Q(**{query_param_name: True})
+            # same but with 'n', 'o'
+            elif search_value in 'no':
+                search_filter = Q(**{query_param_name: False})
+            # if we have any other search value, we exclude both True and False, should return empty
+            elif search_value:
+                search_filter = ~Q(**{f'{query_param_name}__in': [True, False]})
     else:
         query_param_name = column_obj.get_field_search_path()
 

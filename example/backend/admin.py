@@ -13,6 +13,7 @@ from .models import CustomPk
 class TagAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(Tag2)
 class Tag2Admin(admin.ModelAdmin):
     pass
