@@ -1,6 +1,6 @@
 'use strict';
 
-window.AjaxDatatableViewUtils = (function() {
+window.AjaxDatatableViewUtils = (function () {
 
     //var _search_icon_html = '<div style="border: 1px solid #ccc; text-align: center;">?</div>';
     var _options = {};
@@ -88,8 +88,7 @@ window.AjaxDatatableViewUtils = (function() {
         if (value != old_value) {
             console.log('searching ...');
             column.search(value).draw();
-        }
-        else {
+        } else {
             console.log('skipped');
         }
     };
@@ -127,55 +126,55 @@ window.AjaxDatatableViewUtils = (function() {
     function _setup_column_filters(table, data) {
 
         if (data.show_column_filters) {
+            var filter_row = $('<tr class="datatable-column-filter-row">');
+            var header_array = [];
+            $.each(data.columns, function (index, item) {
+                var filter_column;
+                if (item.searchable) {
+                    var search;
+                    if ('choices' in item && item.choices) {
 
-            var filter_row = '<tr class="datatable-column-filter-row">';
-            $.each(data.columns, function(index, item) {
-                if (item.visible) {
-                    if (item.searchable) {
-                        var html = '';
-                        if ('choices' in item && item.choices) {
-
-                            // See: https://www.datatables.net/examples/api/multi_filter_select.html
-                            var select = $('<select data-index="' + index.toString() + '"><option value=""></option></select>');
-                            $(item.choices).each(function(index, choice) {
-                                var option = $("<option>").attr('value', choice[0]).text(choice[1]);
-                                if (choice[0] === item.initialSearchValue) {
-                                    option.attr('selected', 'selected');
-                                }
-                                select.append(option);
-                            });
-                            html = $('<div>').append(select).html();
-                        }
-                        else {
-                            var input = $('<input>')
-                                .attr('type', 'text')
-                                .attr('data-index', index)
-                                .attr('placeholder', '...')
-                                .attr('value', item.initialSearchValue ? item.initialSearchValue : '')
-                            html = $('<div>').append(input).html();
-                        }
-                        if (item.className) {
-                            filter_row += '<th class="' + item.className + '">' + html + '</th>';
-                        }
-                        else {
-                            filter_row += '<th>' + html + '</th>';
-                        }
+                        // See: https://www.datatables.net/examples/api/multi_filter_select.html
+                        var select = $('<select data-index="' + index.toString() + '"><option value=""></option></select>');
+                        $(item.choices).each(function (index, choice) {
+                            var option = $("<option>").attr('value', choice[0]).text(choice[1]);
+                            if (choice[0] === item.initialSearchValue) {
+                                option.attr('selected', 'selected');
+                            }
+                            select.append(option);
+                        });
+                        search = $('<div>').append(select);
+                    } else {
+                        var input = $('<input>')
+                            .attr('type', 'text')
+                            .attr('data-index', index)
+                            .attr('placeholder', '...')
+                            .attr('value', item.initialSearchValue ? item.initialSearchValue : '')
+                        search = $('<div>').append(input);
                     }
-                    else {
-                        if (index == 0) {
-                            // var search_icon_html = _options.search_icon_html === undefined ?
-                            //     '<div style="border: 1px solid #ccc; text-align: center;">&nbsp;</div>' : _options.search_icon_html;
-                            var search_icon_html = _options.search_icon_html === undefined ? '' : _options.search_icon_html;
-                            //filter_row += '<th><i class="fa fa-search"></i>&nbsp;</th>';
-                            filter_row += '<th>' + search_icon_html + '</th>';
-                        }
-                        else {
-                            filter_row += '<th></i>&nbsp;</th>';
-                        }
+                    if (item.className) {
+                        filter_column = $('<th>').attr('class', item.className).append(search);
+                    } else {
+                        filter_column = $('<th>').append(search);
+                    }
+                } else {
+                    if (index == 0) {
+                        // var search_icon_html = _options.search_icon_html === undefined ?
+                        //     '<div style="border: 1px solid #ccc; text-align: center;">&nbsp;</div>' : _options.search_icon_html;
+                        var search_icon_html = _options.search_icon_html === undefined ? '' : _options.search_icon_html;
+                        //filter_row += '<th><i class="fa fa-search"></i>&nbsp;</th>';
+                        filter_column = $('<th>').append(search_icon_html);
+                    } else {
+                        filter_column = $('<th>').append("&nbsp;");
                     }
                 }
+
+                header_array.push({"cell": $(filter_column)[0], "unique": true});
+                if (item.visible) {
+                    filter_row.append(filter_column);
+                }
+
             });
-            filter_row += '</tr>';
 
             var wrapper = table.closest('.dataTables_wrapper');
             $(filter_row).appendTo(
@@ -183,10 +182,15 @@ window.AjaxDatatableViewUtils = (function() {
             );
 
             var column_filter_row = wrapper.find('.datatable-column-filter-row')
-            column_filter_row.find('input,select').off().on('keyup change', function(event) {
+            column_filter_row.off().on('keyup change', 'input,select', function (event) {
                 var target = $(event.target);
                 _handle_column_filter(table, data, target);
             });
+
+            // Insert filter row to DataTable header DOM
+            header_array['nTr'] = $(filter_row)[0];
+            table.api().settings()[0].aoHeader.push(header_array);
+
 
             /*
             // Here, we could explicitly invoke the handler for each column filter,
@@ -207,15 +211,14 @@ window.AjaxDatatableViewUtils = (function() {
     };
 
 
-    function _bind_row_tools(table, url, options, extra_data)
-    {
+    function _bind_row_tools(table, url, options, extra_data) {
         //console.log('*** _bind_row_tools()');
 
         if (options.full_row_select) {
 
             // Full row select: when user clicks anywhere in the row,
             // expand it to show further details
-            table.api().on('click', 'td', function(event) {
+            table.api().on('click', 'td', function (event) {
                 //event.preventDefault();
                 var tr = $(this).closest('tr');
 
@@ -229,10 +232,9 @@ window.AjaxDatatableViewUtils = (function() {
                 if (row.child.isShown()) {
                     row.child.hide();
                     tr.removeClass('shown');
-                }
-                else {
+                } else {
                     table.find('tr').removeClass('shown');
-                    table.api().rows().every(function( rowIdx, tableLoop, rowLoop) {
+                    table.api().rows().every(function (rowIdx, tableLoop, rowLoop) {
                         this.child.hide();
                     });
                     if (!tr.hasClass('details')) {
@@ -245,22 +247,20 @@ window.AjaxDatatableViewUtils = (function() {
         } else {
 
             // Use "plus" and "minus" links to toggle row details
-            table.api().on('click', 'td.dataTables_row-tools .plus, td.dataTables_row-tools .minus', function(event) {
+            table.api().on('click', 'td.dataTables_row-tools .plus, td.dataTables_row-tools .minus', function (event) {
                 event.preventDefault();
                 var tr = $(this).closest('tr');
                 var row = table.api().row(tr);
                 if (row.child.isShown()) {
                     row.child.hide();
                     tr.removeClass('shown');
-                }
-                else {
+                } else {
                     //row.child(_load_row_details(row.data(), url), 'details').show('slow');
                     //tr.addClass('shown');
                     var data = _load_row_details(row.data(), url, extra_data);
                     if (options.detail_callback) {
                         options.detail_callback(data, tr);
-                    }
-                    else {
+                    } else {
                         row.child(data, 'details').show('slow');
                     }
                     tr.addClass('shown');
@@ -293,7 +293,7 @@ window.AjaxDatatableViewUtils = (function() {
                 // },
                 data: data,
                 dataType: 'json',
-                success: function(json) {
+                success: function (json) {
                     var parent_row_id = json['parent-row-id'];
                     if (parent_row_id !== undefined) {
                         div.attr('data-parent-row-id', parent_row_id);
@@ -323,8 +323,7 @@ window.AjaxDatatableViewUtils = (function() {
         if (data.show_date_filters) {
             if (_options.fn_daterange_widget_initialize) {
                 _options.fn_daterange_widget_initialize(table, data);
-            }
-            else {
+            } else {
                 var wrapper = table.closest('.dataTables_wrapper');
                 var toolbar = wrapper.find(".toolbar");
                 toolbar.html(
@@ -333,7 +332,7 @@ window.AjaxDatatableViewUtils = (function() {
                     '<span class="to"><label>To</label>: <input type="date" class="date_to datepicker"></span>' +
                     '</div>'
                 );
-                toolbar.find('.date_from, .date_to').on('change', function(event) {
+                toolbar.find('.date_from, .date_to').on('change', function (event) {
                     // Annotate table with values retrieved from date widgets
                     table.data('date_from', wrapper.find('.date_from').val());
                     table.data('date_to', wrapper.find('.date_to').val());
@@ -362,7 +361,7 @@ window.AjaxDatatableViewUtils = (function() {
         footer.html(html);
     }
 
-    function initialize_table(element, url, extra_options={}, extra_data={}) {
+    function initialize_table(element, url, extra_options = {}, extra_data = {}) {
 
         var data = {action: 'initialize'};
         if (extra_data) {
@@ -375,7 +374,7 @@ window.AjaxDatatableViewUtils = (function() {
             data: data,
             dataType: 'json',
             headers: {'X-CSRFToken': getCSRFToken()}
-        }).done(function(data, textStatus, jqXHR) {
+        }).done(function (data, textStatus, jqXHR) {
 
             // https://datatables.net/manual/api#Accessing-the-API
             // It is important to note the difference between:
@@ -417,43 +416,43 @@ window.AjaxDatatableViewUtils = (function() {
                 //         "sortDescending": ": activate to sort column descending"
                 //     }
                 // },
-                ajax: function(data, callback, settings) {
-                      var table = $(this);
-                      data.date_from = table.data('date_from');
-                      data.date_to = table.data('date_to');
-                      if (extra_data) {
-                          Object.assign(data, extra_data);
-                      }
-                      console.log("data tx: %o", data);
-                      $.ajax({
-                          type: 'POST',
-                          url: url,
-                          data: data,
-                          dataType: 'json',
-                          cache: false,
-                          crossDomain: false,
-                          headers: {'X-CSRFToken': getCSRFToken()}
-                      }).done(function(data, textStatus, jqXHR) {
-                          console.log('data rx: %o', data);
-                          callback(data);
+                ajax: function (data, callback, settings) {
+                    var table = $(this);
+                    data.date_from = table.data('date_from');
+                    data.date_to = table.data('date_to');
+                    if (extra_data) {
+                        Object.assign(data, extra_data);
+                    }
+                    console.log("data tx: %o", data);
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: data,
+                        dataType: 'json',
+                        cache: false,
+                        crossDomain: false,
+                        headers: {'X-CSRFToken': getCSRFToken()}
+                    }).done(function (data, textStatus, jqXHR) {
+                        console.log('data rx: %o', data);
+                        callback(data);
 
-                          var footer_message = data.footer_message;
-                          if (footer_message !== null) {
-                              _write_footer(table, footer_message);
-                          }
+                        var footer_message = data.footer_message;
+                        if (footer_message !== null) {
+                            _write_footer(table, footer_message);
+                        }
 
-                      }).fail(function(jqXHR, textStatus, errorThrown) {
-                          console.log('ERROR: ' + jqXHR.responseText);
-                      });
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        console.log('ERROR: ' + jqXHR.responseText);
+                    });
                 },
                 columns: data.columns,
                 searchCols: data.searchCols,
                 lengthMenu: data.length_menu,
                 order: data.order,
-                initComplete: function() {
+                initComplete: function () {
                     // HACK: wait 200 ms then adjust the column widths
                     // of all visible tables
-                    setTimeout(function() {
+                    setTimeout(function () {
                         AjaxDatatableViewUtils.adjust_table_columns();
                     }, 200);
 
@@ -463,14 +462,14 @@ window.AjaxDatatableViewUtils = (function() {
                         'initComplete', [table]
                     );
                 },
-                drawCallback: function(settings) {
+                drawCallback: function (settings) {
                     // Notify subscribers
                     //console.log('Broadcast drawCallback()');
                     table.trigger(
                         'drawCallback', [table, settings]
                     );
                 },
-                rowCallback: function(row, data) {
+                rowCallback: function (row, data) {
                     // Notify subscribers
                     //console.log('Broadcast rowCallback()');
                     table.trigger(
