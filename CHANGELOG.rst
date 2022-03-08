@@ -3,6 +3,10 @@
 History
 =======
 
+v4.4.3
+------
+* assign '__iexact', instead of '__icontains', as default 'lookup_field' value for columns with choices
+
 v4.4.2
 ------
 * fix: searching on a date/datetime field: when the value entered is not a valid date, we clear the table content to give a feedback to the user

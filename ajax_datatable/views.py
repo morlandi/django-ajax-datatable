@@ -109,7 +109,8 @@ class AjaxDatatableView(View):
                 'autofilter': False,
                 'boolean': False,
                 'max_length': 0,
-                'lookup_field': '__icontains',
+                #'lookup_field': '__icontains',
+                'lookup_field': None,  # postponed default value assignement
             }
 
             # valid_keys = [key for key in column.keys()][:]
@@ -158,18 +159,6 @@ class AjaxDatatableView(View):
                 raise Exception('Duplicate column name "%s" detected' % column['name'])
 
             self.column_specs.append(column)
-
-        # # build LUT for column objects
-        # #
-        # #    self.column_objs_lut = {
-        # #        'id': <ajax_datatable.columns.Column object at 0x109d82850>,
-        # #        'code': <ajax_datatable.columns.Column object at 0x109d82f10>,
-        # #        ...
-        # #
-        # self.column_objs_lut = Column.collect_model_columns(
-        #     self.model,
-        #     self.column_specs
-        # )
 
         # For each table column, we build either a Columns or ForeignColumns as required;
         # both "column spec" dictionary and the column object are saved in "column_index"
@@ -231,6 +220,16 @@ class AjaxDatatableView(View):
                     choices = self.list_autofilter_choices(request, cs, column.model_field, cs['initialSearchValue'])
                 cs['choices'] = choices if len(choices) > 0 else None
             # (3) Otherwise, just use the sequence of choices that has been supplied.
+
+            # Assign default value to 'lookup_field';
+            # if user didn't supply an explicit value ...
+            if cs['lookup_field'] is None:
+                if cs['choices']:
+                    # when using choices, exact match seems more appropriate
+                    cs['lookup_field'] = '__iexact'
+                else:
+                    # in all other cases, use containment instead
+                    cs['lookup_field'] = '__icontains'
 
             self.column_index[key] = {
                 'spec': cs,
