@@ -6,6 +6,7 @@ History
 v4.4.3
 ------
 * assign '__iexact', instead of '__icontains', as default 'lookup_field' value for columns with choices
+* added toolbar_message(): same as footer_message(), but appends message to toolbar
 
 v4.4.2
 ------

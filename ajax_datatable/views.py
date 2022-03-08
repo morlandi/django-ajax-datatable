@@ -562,6 +562,7 @@ class AjaxDatatableView(View):
             paginator = Paginator(qs, params['length'])
         response_dict = self.get_response_dict(request, paginator, params['draw'], params['start'])
         response_dict['footer_message'] = self.footer_message(qs, params)
+        response_dict['toolbar_message'] = self.toolbar_message(qs, params)
 
         # Prepare response
         response = HttpResponse(
@@ -948,6 +949,12 @@ class AjaxDatatableView(View):
         Overriden to append a message to the bottom of the table
         """
         # return 'Selected rows: %d' % qs.count()
+        return None
+
+    def toolbar_message(self, qs, params):
+        """
+        Overriden to append a message to the bottom of the table
+        """
         return None
 
     def list_autofilter_choices(self, request, column_spec, field, initial_search_value):

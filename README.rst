@@ -407,7 +407,7 @@ Example::
         'autofilter': False,                # see `Filtering single columns` below
         'boolean': False,                   # treat calculated column as BooleanField
         'max_length': 0,                    # if > 0, clip result longer then max_length
-        'lookup_field': '__icontains',      # used for searches; default: '__icontains'
+        'lookup_field': '__icontains',      # used for searches; default: '__iexact' for columns with choices, '__icontains' in all other cases
     }, {
         ...
 
@@ -868,6 +868,15 @@ Example:
 
 .. image:: screenshots/005.png
 
+toolbar_message()
+.................
+
+Same as footer_message() but appends message to toolbar:
+
+.. code:: python
+
+    def footer_message(self, qs, params):
+        return 'Selected rows: %d' % qs.count()
 
 render_clip_value_as_html()
 ...........................

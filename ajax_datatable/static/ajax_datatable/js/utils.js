@@ -362,6 +362,17 @@ window.AjaxDatatableViewUtils = (function() {
         footer.html(html);
     }
 
+    function _write_toolbar_message(table, html) {
+        var wrapper = table.closest('.dataTables_wrapper');
+        var toolbar = wrapper.find('.toolbar');
+        var toolbar_message = toolbar.find('.dataTables_extraToolbar');
+        if (toolbar_message.length <= 0) {
+            $('<div class="dataTables_extraToolbar"></div>').appendTo(toolbar);
+            toolbar_message = toolbar.find('.dataTables_extraToolbar');
+        }
+        toolbar_message.html(html);
+    }
+
     function initialize_table(element, url, extra_options={}, extra_data={}) {
 
         var data = {action: 'initialize'};
@@ -440,6 +451,10 @@ window.AjaxDatatableViewUtils = (function() {
                           var footer_message = data.footer_message;
                           if (footer_message !== null) {
                               _write_footer(table, footer_message);
+                          }
+                          var toolbar_message = data.toolbar_message;
+                          if (toolbar_message !== null) {
+                              _write_toolbar_message(table, toolbar_message);
                           }
 
                       }).fail(function(jqXHR, textStatus, errorThrown) {
