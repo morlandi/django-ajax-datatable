@@ -247,10 +247,21 @@ class ColumnLink(object):
 
     def __init__(self, name, model_column=None, searchable='true', orderable='true', search_value='',
                  placeholder=False):
+
+        def to_bool(value):
+            """
+            accept either string or boolean
+            """
+            if type(value) == str:
+                return value == "true"
+            return value
+
         self.name = name
         self._model_column = model_column
-        self.searchable = True if searchable == "true" else False
-        self.orderable = True if orderable == "true" else False
+        # self.searchable = True if searchable == "true" else False
+        # self.orderable = True if orderable == "true" else False
+        self.searchable = to_bool(searchable)
+        self.orderable = to_bool(orderable)
         self.search_value = search_value
         self.placeholder = placeholder or (name == '')
 

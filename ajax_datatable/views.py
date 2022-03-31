@@ -115,7 +115,7 @@ class AjaxDatatableView(View):
 
             # valid_keys = [key for key in column.keys()][:]
             # valid_keys = column.keys().copy()
-            valid_keys = list(column.keys())
+            valid_keys = list(column.keys()) + ['search_value', ]
 
             column.update(c)
 

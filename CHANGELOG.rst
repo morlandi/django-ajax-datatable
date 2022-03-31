@@ -3,6 +3,10 @@
 History
 =======
 
+v4.4.4
+------
+* few changes to allow the initialization of a DatatableView offline (for example, to export a filtered queryset from a background process)
+
 v4.4.3
 ------
 * assign '__iexact', instead of '__icontains', as default 'lookup_field' value for columns with choices
