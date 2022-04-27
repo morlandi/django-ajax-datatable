@@ -420,7 +420,8 @@ class AjaxDatatableView(View):
 
                 buffer.seek(0)
                 response = HttpResponse(buffer, content_type='text/csv')
-                response['Content-Disposition'] = f'attachment; filename={self.title}.csv'
+                response['Content-Disposition'] = f'attachment; filename={self.title.lower()}_datatable_export.csv'
+                return response
 
             response = super(AjaxDatatableView, self).dispatch(request, *args, **kwargs)
         else:
