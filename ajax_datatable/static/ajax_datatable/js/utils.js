@@ -528,13 +528,55 @@ window.AjaxDatatableViewUtils = (function() {
         table.DataTable().ajax.reload(null, false);
     }
 
+    // Export table using last draw params.
+    function export_table(element, url, extra_data={}) {
+        let data = {action: 'export'};
+        if (extra_data) {
+            Object.assign(data, extra_data);
+        }
+
+        let table = element.DataTable();
+
+        Object.assign(data, table.ajax.params());
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: data,
+            xhrFields: {
+                responseType: 'blob'
+            },
+            cache: false,
+            crossDomain: false,
+            headers: {'X-CSRFToken': getCSRFToken()},
+            success: function(result){
+                const filename = xhr.getResponseHeader('content-disposition').split('filename=')[1].split(';')[0];
+                const url = window.URL.createObjectURL(result);
+                const a = document.createElement('a');
+
+                a.style.display = 'none';
+                a.href = url;
+                a.download = filename
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            },
+            error: function(result){
+                console.log(result)
+            }
+        }).done(function(data, textStatus, jqXHR){
+
+        })
+    }
+
 
     return {
         init: init,
         initialize_table: initialize_table,
         adjust_table_columns: adjust_table_columns,
         redraw_all_tables: redraw_all_tables,
-        redraw_table: redraw_table
+        redraw_table: redraw_table,
+        export_table: export_table
     };
 
 })();
