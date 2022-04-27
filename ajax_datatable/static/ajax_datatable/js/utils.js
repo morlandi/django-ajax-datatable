@@ -549,7 +549,7 @@ window.AjaxDatatableViewUtils = (function() {
             cache: false,
             crossDomain: false,
             headers: {'X-CSRFToken': getCSRFToken()},
-            success: function(result){
+            success: function(result, status, xhr){
                 const filename = xhr.getResponseHeader('content-disposition').split('filename=')[1].split(';')[0];
                 const url = window.URL.createObjectURL(result);
                 const a = document.createElement('a');
