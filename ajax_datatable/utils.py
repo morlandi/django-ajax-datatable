@@ -4,7 +4,8 @@ from django.utils import timezone
 from django.conf import settings
 from django.utils import formats
 
-import pytz
+# Support for pytz is deprecated in Django 4.0 will be removed in Django 5.0
+# import pytz
 
 # Check if sqlparse is available for indentation
 try:
@@ -105,9 +106,13 @@ def format_datetime(dt, include_time=True):
     if isinstance(dt, datetime.datetime):
         try:
             dt = timezone.localtime(dt)
-        except Exception:
-            local_tz = pytz.timezone(getattr(settings, 'TIME_ZONE', 'UTC'))
-            dt = local_tz.localize(dt)
+        except ValueError:
+            dt = timezone.make_aware(dt)
+        # Support for pytz is deprecated in Django 4.0 will be removed in Django 5.0
+        # except Exception:
+        #     local_tz = pytz.timezone(getattr(settings, 'TIME_ZONE', 'UTC'))
+        #     dt = local_tz.localize(dt)
+
     else:
         assert isinstance(dt, datetime.date)
         include_time = False
