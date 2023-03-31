@@ -202,10 +202,10 @@ class ForeignColumn(Column):
                         getattr(current_value, current_path_item)
                         for current_value in current_value.get_queryset()
                     ]
-                except AttributeError:
+                except (AttributeError, TypeError):
                     try:
                         current_value = [getattr(f, current_path_item) for f in current_value]
-                    except AttributeError:
+                    except (AttributeError, TypeError):
                         current_value = None
 
             if current_value is None:
