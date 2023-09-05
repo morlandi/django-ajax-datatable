@@ -1496,7 +1496,7 @@ Working example:
                 Frontend.display_server_error_ex(jqXHR);
             }).always(function() {
 
-                // Single the object has been changed, we need to update the table row;
+                // Since the object has been changed, we need to update the table row;
                 // Redraw the row holding the current paging position
                 let table = $(tr).closest('table.dataTable');
                 table.DataTable().row(tr).invalidate().draw(false);
