@@ -1472,12 +1472,12 @@ Working example:
             event.preventDefault();
             let td = $(event.target).closest('td');
 
-            // Retrieve the table row and the object id
+            // Retrieve the table row and the record id
             let tr = td.closest('tr');
             // Es: "row-692255dc-7eaa-4150-be19-a555a8b34188"
             let row_id = tr.attr('id').substr(4);
 
-            // Call the server via AJAX to process the object
+            // Call the server via AJAX to process the record
             let url = sprintf('/{{LANGUAGE_CODE}}/j/product_order/%s/toggle_queue_status/', row_id);
             FrontendForms.overlay_show(tr);
             var promise = $.ajax({
@@ -1496,7 +1496,7 @@ Working example:
                 Frontend.display_server_error_ex(jqXHR);
             }).always(function() {
 
-                // Since the object has been changed, we need to update the table row;
+                // Since the record has been changed, we need to update the table row;
                 // Redraw the row holding the current paging position
                 let table = $(tr).closest('table.dataTable');
                 table.DataTable().row(tr).invalidate().draw(false);
