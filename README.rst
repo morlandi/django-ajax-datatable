@@ -1456,13 +1456,56 @@ Redraw table holding the current paging position
 Redraw a single table row
 -------------------------
 
-TODO: THIS DOESN'T SEEM TO WORK PROPERLY 😭
+.. code:: javascript
+
+    table.DataTable().row(tr).invalidate().draw(false);
+
+Working example:
 
 .. code:: javascript
 
-    table.DataTable().row(tr).invalidate().draw();
+        {% get_current_language as LANGUAGE_CODE %}
 
-Example:
+        function onToggleQueueStatus(event) {
+
+            // The link is a table cell
+            event.preventDefault();
+            let td = $(event.target).closest('td');
+
+            // Retrieve the table row and the object id
+            let tr = td.closest('tr');
+            // Es: "row-692255dc-7eaa-4150-be19-a555a8b34188"
+            let row_id = tr.attr('id').substr(4);
+
+            // Call the server via AJAX to process the object
+            let url = sprintf('/{{LANGUAGE_CODE}}/j/product_order/%s/toggle_queue_status/', row_id);
+            FrontendForms.overlay_show(tr);
+            var promise = $.ajax({
+                type: 'POST',
+                url: url,
+                data: null,
+                cache: false,
+                crossDomain: false,
+                headers: {
+                    'X-CSRFToken': FrontendForms.getCookie('csrftoken')
+                }
+            }).done(function(data, textStatus, jqXHR) {
+                //console.log('OK; data=%o', data);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.log('ERROR: ' + jqXHR.responseText);
+                Frontend.display_server_error_ex(jqXHR);
+            }).always(function() {
+
+                // Single the object has been changed, we need to update the table row;
+                // Redraw the row holding the current paging position
+                let table = $(tr).closest('table.dataTable');
+                table.DataTable().row(tr).invalidate().draw(false);
+
+            });
+            return promise;
+        }
+
+Another (very old) Example:
 
 .. code:: javascript
 
