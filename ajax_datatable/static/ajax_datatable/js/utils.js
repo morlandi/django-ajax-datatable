@@ -128,18 +128,24 @@ window.AjaxDatatableViewUtils = (function() {
 
         if (data.show_column_filters) {
 
+            var savedstate = table.api().state.loaded();
             var filter_row = '<tr class="datatable-column-filter-row">';
             $.each(data.columns, function(index, item) {
                 if (item.visible) {
                     if (item.searchable) {
                         var html = '';
+                        var initial_search_value = item.initialSearchValue ? item.initialSearchValue : ''
+                        if (!initial_search_value && savedstate) {
+                            var saved_search = savedstate.columns[index].search.search
+                            initial_search_value = saved_search ? saved_search : initial_search_value 
+                        }
                         if ('choices' in item && item.choices) {
 
                             // See: https://www.datatables.net/examples/api/multi_filter_select.html
                             var select = $('<select data-index="' + index.toString() + '"><option value=""></option></select>');
                             $(item.choices).each(function(index, choice) {
                                 var option = $("<option>").attr('value', choice[0]).text(choice[1]);
-                                if (choice[0] === item.initialSearchValue) {
+                                if (choice[0] === initial_search_value) {
                                     option.attr('selected', 'selected');
                                 }
                                 select.append(option);
@@ -151,7 +157,7 @@ window.AjaxDatatableViewUtils = (function() {
                                 .attr('type', 'text')
                                 .attr('data-index', index)
                                 .attr('placeholder', '...')
-                                .attr('value', item.initialSearchValue ? item.initialSearchValue : '')
+                                .attr('value', initial_search_value)
                             html = $('<div>').append(input).html();
                         }
                         if (item.className) {
