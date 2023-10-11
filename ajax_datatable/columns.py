@@ -318,7 +318,7 @@ class Order(object):
 
     def get_order_mode(self):
         if not self.ascending:
-            return '-' + self.column_link.get_field_search_path()
-        return self.column_link.get_field_search_path()
+            return models.F(self.column_link.get_field_search_path()).desc(nulls_last=True)
+        return models.F(self.column_link.get_field_search_path()).asc(nulls_last=True)
 
 ################################################################################
