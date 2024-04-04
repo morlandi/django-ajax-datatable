@@ -824,7 +824,8 @@ class AjaxDatatableView(View):
 
     def filter_queryset(self, params, qs):
 
-        qs = self.filter_queryset_by_date_range(params.get('date_from', None), params.get('date_to', None), qs)
+        if self.show_date_filters:
+            qs = self.filter_queryset_by_date_range(params.get('date_from', None), params.get('date_to', None), qs)
 
         if 'search_value' in params:
             qs = self.filter_queryset_all_columns(params['search_value'], qs)
