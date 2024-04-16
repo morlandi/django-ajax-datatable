@@ -4,6 +4,8 @@ from __future__ import absolute_import, unicode_literals
 
 import datetime
 import json
+import io
+import csv
 from django.views.generic import View
 from django.http.response import HttpResponse, HttpResponseBadRequest
 from django.core.exceptions import FieldDoesNotExist
@@ -407,6 +409,19 @@ class AjaxDatatableView(View):
                     'html': self.render_row_details(row_id, request),
                     'parent-row-id': row_id,
                 })
+            elif action == 'export':
+                rows = self.export_table(request, *args, **kwargs)
+
+                buffer = io.StringIO()  # python 2 needs io.BytesIO() instead
+                wr = csv.writer(buffer, quoting=csv.QUOTE_ALL)
+                wr.writerow(rows[0].keys())
+                for row in rows:
+                    wr.writerow(row.values())
+
+                buffer.seek(0)
+                response = HttpResponse(buffer, content_type='text/csv')
+                response['Content-Disposition'] = f'attachment; filename={self.title.lower()}_datatable_export.csv'
+                return response
 
             response = super(AjaxDatatableView, self).dispatch(request, *args, **kwargs)
         else:
@@ -1002,3 +1017,50 @@ class AjaxDatatableView(View):
             print('ERROR: ' + str(e))
             choices = []
         return choices
+
+    def export_table(self, request, *args, **kwargs):
+        try:
+            query_dict = request.REQUEST
+            params = self.read_parameters(query_dict)
+        except ValueError:
+            return HttpResponseBadRequest()
+
+        if TRACE_QUERYDICT:
+            trace(json.dumps(query_dict, indent=2, cls=DjangoJSONEncoder), prompt='query_dict')
+            trace(params, prompt='params', prettify=True)
+
+        # Prepare the queryset and apply the search and order filters
+        qs = self.get_initial_queryset(request)
+        if not DISABLE_QUERYSET_OPTIMIZATION and not self.disable_queryset_optimization:
+            if (
+                    self.disable_queryset_optimization_select_related and
+                    self.disable_queryset_optimization_only and self.disable_queryset_optimization_prefetch_related
+            ):
+                pass
+            else:
+                qs = self.optimize_queryset(qs)
+        qs = self.prepare_queryset(params, qs)
+        if TRACE_QUERYSET:
+            prettyprint_queryset(qs)
+
+        # Slice result
+        # paginator = Paginator(qs, params['length'] if params['length'] != -1 else qs.count())
+
+        columns = [c['name'] for c in self.column_specs]
+        json_data = []
+        for cur_object in qs:
+            retdict = {
+                # fieldname: '<div class="field-%s">%s</div>' % (fieldname, self.render_column(cur_object, fieldname))
+                fieldname: self.render_column(cur_object, fieldname)
+                for fieldname in columns
+                if fieldname
+            }
+
+            self.export_row(retdict, cur_object)
+
+            json_data.append(retdict)
+
+        return json_data
+
+    def export_row(self, row, obj):
+        pass
