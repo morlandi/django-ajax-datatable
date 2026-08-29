@@ -82,7 +82,7 @@ window.AjaxDatatableViewUtils = (function() {
         var index = target.data('index');
         var value = target.val();
 
-        var column = table.api().column(index);
+        var column = table.api().column(index + ":name");
         var old_value = column.search();
         console.log('Request to search value %o in column %o (current value: %o)', value, index, old_value);
         if (value != old_value) {
@@ -136,7 +136,7 @@ window.AjaxDatatableViewUtils = (function() {
                         if ('choices' in item && item.choices) {
 
                             // See: https://www.datatables.net/examples/api/multi_filter_select.html
-                            var select = $('<select data-index="' + index.toString() + '"><option value=""></option></select>');
+                            var select = $('<select data-index="' + item.name.toString() + '"><option value=""></option></select>');
                             $(item.choices).each(function(index, choice) {
                                 var option = $("<option>").attr('value', choice[0]).text(choice[1]);
                                 if (choice[0] === item.initialSearchValue) {
@@ -149,7 +149,7 @@ window.AjaxDatatableViewUtils = (function() {
                         else {
                             var input = $('<input>')
                                 .attr('type', 'text')
-                                .attr('data-index', index)
+                                .attr('data-index', item.name)
                                 .attr('placeholder', '...')
                                 .attr('value', item.initialSearchValue ? item.initialSearchValue : '')
                             html = $('<div>').append(input).html();
