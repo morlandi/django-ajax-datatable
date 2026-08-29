@@ -435,7 +435,7 @@ window.AjaxDatatableViewUtils = (function() {
                       if (extra_data) {
                           Object.assign(data, extra_data);
                       }
-                      console.log("data tx: %o", data);
+                    //   console.log("data tx: %o", data);
                       $.ajax({
                           type: 'POST',
                           url: url,
@@ -445,7 +445,7 @@ window.AjaxDatatableViewUtils = (function() {
                           crossDomain: false,
                           headers: {'X-CSRFToken': getCSRFToken()}
                       }).done(function(data, textStatus, jqXHR) {
-                          console.log('data rx: %o', data);
+                        //   console.log('data rx: %o', data);
                           callback(data);
 
                           var footer_message = data.footer_message;
@@ -458,7 +458,7 @@ window.AjaxDatatableViewUtils = (function() {
                           }
 
                       }).fail(function(jqXHR, textStatus, errorThrown) {
-                          console.log('ERROR: ' + jqXHR.responseText);
+                        //   console.log('ERROR: ' + jqXHR.responseText);
                       });
                 },
                 columns: data.columns,
