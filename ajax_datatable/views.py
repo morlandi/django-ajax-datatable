@@ -109,6 +109,7 @@ class AjaxDatatableView(View):
                 'autofilter': False,
                 'boolean': False,
                 'max_length': 0,
+                'type': None,
                 #'lookup_field': '__icontains',
                 'lookup_field': None,  # postponed default value assignement
             }
